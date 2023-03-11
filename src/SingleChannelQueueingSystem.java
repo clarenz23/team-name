@@ -22,8 +22,8 @@ public class SingleChannelQueueingSystem {
             System.exit(0);
         }
 
-        System.out.println("\nSimulation will terminate after " + value +
-                (option == 1 ? " customers have been served." : " minutes have elapsed."));
+        System.out.printf("\nSimulation will terminate after %d %s.\n",
+                value, (option == 1) ? "customers have been served" : "minutes have elapsed");
 
         System.out.println("\nSimulation table:\n");
         System.out.println("CUSTOMER NO. | INTERARRIVAL TIME (MINS) | ARRIVAL TIME (MINS) | SERVICE TIME (MINS) | TIME SERVICE BEGINS | WAITING TIME | TIME SERVICE ENDS | CUSTOMER SPENDS IN SYSTEM | IDLE TIME OF SERVER (MINS)");
