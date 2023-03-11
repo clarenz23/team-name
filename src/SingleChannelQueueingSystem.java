@@ -4,24 +4,32 @@ public class SingleChannelQueueingSystem {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Please choose the simulation termination option!");
-        System.out.println("1. Based on number of customers");
-        System.out.println("2. Based on number of minutes");
-        System.out.print("Enter your choice (1 or 2): ");
-        int option = scanner.nextInt();
+        boolean endProgram = false;
+        while (!endProgram) {
+            System.out.println("Please choose the simulation termination option!");
+            System.out.println("1. Based on number of customers");
+            System.out.println("2. Based on number of minutes");
+            System.out.println("3. End program");
+            System.out.print("Enter your choice (1, 2, or 3): ");
+            int option = scanner.nextInt();
 
-        int value = 0;
-        if (option == 1) {
-            System.out.print("Enter the number of customers to simulate: ");
-            value = scanner.nextInt();
-        } else if (option == 2) {
-            System.out.print("Enter the number of minutes to simulate: ");
-            value = scanner.nextInt();
-        } else {
-            System.out.println("Invalid option selected. Terminating simulation.");
-            System.exit(0);
-        }
+            int value = 0;
+            if (option == 1) {
+                System.out.print("Enter the number of customers to simulate: ");
+                value = scanner.nextInt();
+            } else if (option == 2) {
+                System.out.print("Enter the number of minutes to simulate: ");
+                value = scanner.nextInt();
+            } else if (option == 3) {
+                endProgram = true;
+            } else {
+                System.out.println("Invalid option selected.");
+                continue;
+            }
 
+            if (endProgram) {
+                break;
+            }
         System.out.printf("\nSimulation will terminate after %d %s.\n",
                 value, (option == 1) ? "customers have been served" : "minutes have elapsed");
 
