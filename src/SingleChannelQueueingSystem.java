@@ -99,6 +99,7 @@ public class SingleChannelQueueingSystem {
 
             // Increment customer number
             customerNumber++;
+            }
         }
     }
 }
