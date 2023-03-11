@@ -54,25 +54,29 @@ public class SingleChannelQueueingSystem {
         // Simulation table
         while ((option == 1 && customerNumber <= value) || (option == 2 && customerSpendsInSystem < value)) {
             // Generate interarrival time based on distribution
-            double rand1 = Math.random();
-            if (rand1 < 0.125) {
-                interarrivalTime = 1;
-            } else if (rand1 < 0.250) {
-                interarrivalTime = 2;
-            } else if (rand1 < 0.375) {
-                interarrivalTime = 3;
-            } else if (rand1 < 0.500) {
-                interarrivalTime = 4;
-            } else if (rand1 < 0.625) {
-                interarrivalTime = 5;
-            } else if (rand1 < 0.750) {
-                interarrivalTime = 6;
-            } else if (rand1 < 0.875) {
-                interarrivalTime = 7;
+            if (customerNumber == 1){
+                interarrivalTime = 0;
+                arrivalTime = 0;
             } else {
-                interarrivalTime = 8;
+                double rand1 = Math.random();
+                if (rand1 < 0.125) {
+                    interarrivalTime = 1;
+                } else if (rand1 < 0.250) {
+                    interarrivalTime = 2;
+                } else if (rand1 < 0.375) {
+                    interarrivalTime = 3;
+                } else if (rand1 < 0.500) {
+                    interarrivalTime = 4;
+                } else if (rand1 < 0.625) {
+                    interarrivalTime = 5;
+                } else if (rand1 < 0.750) {
+                    interarrivalTime = 6;
+                } else if (rand1 < 0.875) {
+                    interarrivalTime = 7;
+                } else {
+                    interarrivalTime = 8;
+                }
             }
-
 
             //Generate service time based on distribution
             double rand2 = Math.random();
