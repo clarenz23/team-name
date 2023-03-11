@@ -99,7 +99,7 @@ public class SingleChannelQueueingSystem {
             timeServiceBegins = Math.max(arrivalTime, timeServiceEnds);
             waitingTime = timeServiceBegins - arrivalTime;
             timeServiceEnds = timeServiceBegins + serviceTime;
-            customerSpendsInSystem = waitingTime + serviceTime;
+            customerSpendsInSystem = timeServiceEnds - arrivalTime;
             idleTimeOfServer = idleTimeOfServer + (timeServiceBegins - arrivalTime);
 
             // Print simulation table row
