@@ -95,27 +95,30 @@ public class SingleChannelQueueingSystem {
                 serviceTime = 5;
             }
 
-            totalServiceTime += serviceTime;
-
             // Calculate values for simulation table
             arrivalTime = arrivalTime + interarrivalTime;
             timeServiceBegins = Math.max(arrivalTime, timeServiceEnds);
             waitingTime = timeServiceBegins - arrivalTime;
             timeServiceEnds = timeServiceBegins + serviceTime;
             customerSpendsInSystem = timeServiceEnds - arrivalTime;
-            idleTimeOfServer = idleTimeOfServer + (timeServiceBegins - arrivalTime);
+
+            if (customerNumber == 2) {
+                idleTimeOfServer = timeServiceEnds - arrivalTime;
+            }
+
+            totalInterarrivalTime += interarrivalTime;
+            totalServiceTime += serviceTime;
 
             totalWaitingTime += waitingTime;
             if (waitingTime > 0) {
                 numOfWaitingCustomers++;
             }
 
-            totalIdleTimeOfServer += idleTimeOfServer;
-            totalInterarrivalTime += interarrivalTime;
             totalCustomerSpends += customerSpendsInSystem;
+            totalIdleTimeOfServer += idleTimeOfServer;
 
             // Print simulation table row
-            System.out.printf("%-12d | %-26d | %-19d | %-19d | %-19d | %-12d | %-17d | %-25d | %-29d\n",
+            System.out.printf("%-12d | %-24d | %-19d | %-19d | %-19d | %-12d | %-17d | %-25d | %-29d\n",
                     customerNumber, interarrivalTime, arrivalTime, serviceTime, timeServiceBegins,
                     waitingTime, timeServiceEnds, customerSpendsInSystem, idleTimeOfServer);
 
@@ -123,6 +126,12 @@ public class SingleChannelQueueingSystem {
             customerNumber++;
             numCustomersInQueue--;
             }
+
+            // Print total
+            System.out.println("----------------------------------------------------------------------------------------------" +
+                    "----------------------------------------------------------------------------------------------------------");
+            System.out.printf("Total:       | %-46d | %-41d | %-32d | %-26d | %-14d\n",
+                    totalInterarrivalTime, totalServiceTime, totalWaitingTime, totalCustomerSpends, totalIdleTimeOfServer);
 
             // Calculate performance metrics
             double avgWaitingTime = (double) totalWaitingTime / (customerNumber);
@@ -142,13 +151,13 @@ public class SingleChannelQueueingSystem {
 
             // Display performance metrics
             System.out.println("\nPerformance Metrics:");
-            System.out.println("Average waiting time for a customer: " + formatAvgWaitingTime + " minutes");
-            System.out.println("Probability that a customer has to wait in the queue: " + formatProbCustomerWaits);
-            System.out.println("Proportion of idle time of the server: " + formatPropIdleTime);
-            System.out.println("Average service time: " + formatAvgServiceTime + " minutes");
-            System.out.println("Average time between arrivals: " + formatAvgInterarrivalTime + " minutes");
-            System.out.println("Average waiting time for those who wait in queue: " + formatAvgQueueWaitTime + " minutes");
-            System.out.println("Average time a customer spends in the system: " + formatAvgCustomerSpends + " minutes");
+            System.out.println("Average waiting time for a customer                    = " + formatAvgWaitingTime + " minutes");
+            System.out.println("Probability that a customer has to wait in the queue   = " + formatProbCustomerWaits);
+            System.out.println("Proportion of idle time of the server                  = " + formatPropIdleTime);
+            System.out.println("Average service time                                   = " + formatAvgServiceTime + " minutes");
+            System.out.println("Average time between arrivals                          = " + formatAvgInterarrivalTime + " minutes");
+            System.out.println("Average waiting time for those who wait in queue       = " + formatAvgQueueWaitTime + " minutes");
+            System.out.println("Average time a customer spends in the system           = " + formatAvgCustomerSpends + " minutes");
             System.out.printf("\nSimulation was terminated after %d %s.\n",
                     value, (option == 1) ? "customers have been served" : "minutes have elapsed");
             System.out.println();
