@@ -6,10 +6,11 @@ public class SingleChannelQueueingSystem {
 
         boolean endProgram = false;
         while (!endProgram) {
-            System.out.println("Please choose the simulation termination option!");
-            System.out.println("1. Based on number of customers");
-            System.out.println("2. Based on number of minutes");
-            System.out.println("3. End program");
+            System.out.println("""
+                        Please choose the simulation termination option!
+                        \t1. Based on number of customers
+                        \t2. Based on number of minutes
+                        \t3. End program""");
             System.out.print("Enter your choice (1, 2, or 3): ");
             int option = scanner.nextInt();
 
@@ -50,6 +51,8 @@ public class SingleChannelQueueingSystem {
         int totalCustomerSpends = 0;
         int totalInterarrivalTime = 0;
         int numCustomersInQueue = 0;
+        int numOfWaitingCustomers = 0;
+        int totalIdleTimeOfServer = 0;
 
         // Simulation table
         while ((option == 1 && customerNumber <= value) || (option == 2 && customerSpendsInSystem < value)) {
@@ -102,6 +105,15 @@ public class SingleChannelQueueingSystem {
             customerSpendsInSystem = timeServiceEnds - arrivalTime;
             idleTimeOfServer = idleTimeOfServer + (timeServiceBegins - arrivalTime);
 
+            totalWaitingTime += waitingTime;
+            if (waitingTime > 0) {
+                numOfWaitingCustomers++;
+            }
+
+            totalIdleTimeOfServer += idleTimeOfServer;
+            totalInterarrivalTime += interarrivalTime;
+            totalCustomerSpends += customerSpendsInSystem;
+
             // Print simulation table row
             System.out.printf("%-12d | %-26d | %-19d | %-19d | %-19d | %-12d | %-17d | %-25d | %-29d\n",
                     customerNumber, interarrivalTime, arrivalTime, serviceTime, timeServiceBegins,
@@ -113,19 +125,19 @@ public class SingleChannelQueueingSystem {
             }
 
             // Calculate performance metrics
-            double avgWaitingTime = (double) totalWaitingTime / (customerNumber - 1);
+            double avgWaitingTime = (double) totalWaitingTime / (customerNumber);
             String formatAvgWaitingTime = String.format("%.2f", avgWaitingTime);
-            double probCustomerWaits = (double) numCustomersInQueue / customerNumber;
+            double probCustomerWaits = (double) numOfWaitingCustomers / customerNumber;
             String formatProbCustomerWaits = String.format("%.2f", probCustomerWaits);
-            double propIdleTime = (double) idleTimeOfServer / timeServiceBegins;
+            double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds;
             String formatPropIdleTime = String.format("%.2f", propIdleTime);
             double avgServiceTime = (double) totalServiceTime / customerNumber;
             String formatAvgServiceTime = String.format("%.2f", avgServiceTime);
             double avgInterarrivalTime = (double) totalInterarrivalTime / (customerNumber - 1);
             String formatAvgInterarrivalTime = String.format("%.2f", avgInterarrivalTime);
-            double avgQueueWaitTime = (double) totalQueueTime / numCustomersInQueue;
+            double avgQueueWaitTime = (double) totalWaitingTime / numOfWaitingCustomers;
             String formatAvgQueueWaitTime = String.format("%.2f", avgQueueWaitTime);
-            double avgCustomerSpends = (double) customerSpendsInSystem / customerNumber;
+            double avgCustomerSpends = (double) totalCustomerSpends/ customerNumber;
             String formatAvgCustomerSpends = String.format("%.2f", avgCustomerSpends);
 
             // Display performance metrics
