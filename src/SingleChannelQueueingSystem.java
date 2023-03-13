@@ -102,8 +102,8 @@ public class SingleChannelQueueingSystem {
             timeServiceEnds = timeServiceBegins + serviceTime;
             customerSpendsInSystem = timeServiceEnds - arrivalTime;
 
-            if (customerNumber == 2) {
-                idleTimeOfServer = timeServiceEnds - arrivalTime;
+            if (customerNumber > 1) {
+                idleTimeOfServer = timeServiceBegins - arrivalTime;
             }
 
             totalInterarrivalTime += interarrivalTime;
@@ -114,14 +114,17 @@ public class SingleChannelQueueingSystem {
                 numOfWaitingCustomers++;
             }
 
+            
             totalCustomerSpends += customerSpendsInSystem;
             totalIdleTimeOfServer += idleTimeOfServer;
+            
 
             // Print simulation table row
             System.out.printf("%-12d | %-24d | %-19d | %-19d | %-19d | %-12d | %-17d | %-25d | %-29d\n",
                     customerNumber, interarrivalTime, arrivalTime, serviceTime, timeServiceBegins,
                     waitingTime, timeServiceEnds, customerSpendsInSystem, idleTimeOfServer);
 
+            
             // Increment customer number
             customerNumber++;
             numCustomersInQueue--;
@@ -134,19 +137,19 @@ public class SingleChannelQueueingSystem {
                     totalInterarrivalTime, totalServiceTime, totalWaitingTime, totalCustomerSpends, totalIdleTimeOfServer);
 
             // Calculate performance metrics
-            double avgWaitingTime = (double) totalWaitingTime / (customerNumber);
+            double avgWaitingTime = (double) totalWaitingTime / (customerNumber-1);
             String formatAvgWaitingTime = String.format("%.2f", avgWaitingTime);
-            double probCustomerWaits = (double) numOfWaitingCustomers / customerNumber;
+            double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber-1);
             String formatProbCustomerWaits = String.format("%.2f", probCustomerWaits);
             double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds;
             String formatPropIdleTime = String.format("%.2f", propIdleTime);
-            double avgServiceTime = (double) totalServiceTime / customerNumber;
+            double avgServiceTime = (double) totalServiceTime / (customerNumber-1);
             String formatAvgServiceTime = String.format("%.2f", avgServiceTime);
             double avgInterarrivalTime = (double) totalInterarrivalTime / (customerNumber - 1);
             String formatAvgInterarrivalTime = String.format("%.2f", avgInterarrivalTime);
             double avgQueueWaitTime = (double) totalWaitingTime / numOfWaitingCustomers;
             String formatAvgQueueWaitTime = String.format("%.2f", avgQueueWaitTime);
-            double avgCustomerSpends = (double) totalCustomerSpends/ customerNumber;
+            double avgCustomerSpends = (double) totalCustomerSpends/ (customerNumber-1);
             String formatAvgCustomerSpends = String.format("%.2f", avgCustomerSpends);
 
             // Display performance metrics
