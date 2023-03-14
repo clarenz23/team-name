@@ -20,6 +20,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
     private JTextField valueField;
     private JButton startButton;
     private JButton endButton;
+    private JButton resetButton;
     private JTable table;
     private DefaultTableModel tableModel;
     private JLabel avgWaitingTimeLabel, probCustomerWaitsLabel, propIdleTimeLabel,
@@ -63,9 +64,19 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         endButton.addActionListener(e -> System.exit(0));
         endButton.setPreferredSize(new Dimension(150, 45));
 
+        // Create te reset button
+        resetButton = new JButton("Reset Simulation");
+        resetButton.addActionListener(e -> {
+            valueField.setText("");
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.setRowCount(0);
+        });
+        resetButton.setPreferredSize(new Dimension(150, 45));
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(startButton);
         buttonPanel.add(endButton);
+        buttonPanel.add(resetButton);
 
         // Create the table
         tableModel = new DefaultTableModel(new String[]{"CUSTOMER NO.", "INTERARRIVAL TIME (MINS)", "ARRIVAL TIME (MINS)", "SERVICE TIME (MINS)", "TIME SERVICE BEGINS", "WAITING TIME", "TIME SERVICE ENDS", "CUSTOMER SPENDS IN SYSTEM", "IDLE TIME OF SERVER (MINS)"}, 0);
@@ -81,7 +92,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         statPanel.setBorder(BorderFactory.createTitledBorder("Performance Metrics"));
         statPanel.setPreferredSize(new Dimension(300,280));
         statPanel.setLayout(new GridLayout(0,1));
-        
+
 
         // Add the performance metrics labels
         avgInterarrivalTimeLabel = new JLabel("Average interarrival time:");
@@ -126,7 +137,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         add(inputPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.PAGE_END);
         add(statPanel, BorderLayout.EAST);
-        
+
         // Pack and display the GUI
         pack();
         setLocationRelativeTo(null);
@@ -255,10 +266,10 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Calculate performance metrics
         double avgWaitingTime = (double) totalWaitingTime / (customerNumber-1);
         String formatAvgWaitingTime = String.format("%.2f", avgWaitingTime);
-        double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber-1);
-        String formatProbCustomerWaits = String.format("%.2f", probCustomerWaits);
-        double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds;
-        String formatPropIdleTime = String.format("%.2f", propIdleTime);
+        double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber-1) * 100;
+        String formatProbCustomerWaits = String.format("%.2f%%", probCustomerWaits);
+        double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds * 100;
+        String formatPropIdleTime = String.format("%.2f%%", propIdleTime);
         double avgServiceTime = (double) totalServiceTime / (customerNumber-1);
         String formatAvgServiceTime = String.format("%.2f", avgServiceTime);
         double avgInterarrivalTime = (double) totalInterarrivalTime / (customerNumber - 1);
