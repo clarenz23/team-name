@@ -99,11 +99,16 @@ public class SingleChannelQueueingSystem {
             arrivalTime = arrivalTime + interarrivalTime;
             timeServiceBegins = Math.max(arrivalTime, timeServiceEnds);
             waitingTime = timeServiceBegins - arrivalTime;
+            int prevTimeServiceEnds = timeServiceEnds;
             timeServiceEnds = timeServiceBegins + serviceTime;
             customerSpendsInSystem = timeServiceEnds - arrivalTime;
 
             if (customerNumber > 1) {
-                idleTimeOfServer = timeServiceBegins - arrivalTime;
+                if (arrivalTime > prevTimeServiceEnds) {
+                    idleTimeOfServer = arrivalTime - prevTimeServiceEnds;
+                } else {
+                    idleTimeOfServer = prevTimeServiceEnds - arrivalTime;
+                }
             }
 
             totalInterarrivalTime += interarrivalTime;
