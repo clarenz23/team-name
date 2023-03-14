@@ -56,12 +56,12 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Create the start button
         startButton = new JButton("Start Simulation");
         startButton.addActionListener(this);
-        startButton.setPreferredSize(new Dimension(200, 75));
+        startButton.setPreferredSize(new Dimension(150, 45));
 
         // Create the end button
         endButton = new JButton("End Simulation");
         endButton.addActionListener(e -> System.exit(0));
-        endButton.setPreferredSize(new Dimension(200, 75));
+        endButton.setPreferredSize(new Dimension(150, 45));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(startButton);
@@ -79,8 +79,8 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Create the Performance metrics panel
         JPanel statPanel = new JPanel();
         statPanel.setBorder(BorderFactory.createTitledBorder("Performance Metrics"));
-        statPanel.setPreferredSize(new Dimension(500,250));
-        statPanel.setLayout(new GridLayout(8,2));
+        statPanel.setPreferredSize(new Dimension(300,280));
+        statPanel.setLayout(new GridLayout(8,1));
         
 
         // Add the performance metrics labels
@@ -250,7 +250,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
             customerNumber++;
             numCustomersInQueue--;
         }
-        tableModel.addRow(new Object[]{"", totalInterarrivalTime, "", totalServiceTime, "", totalWaitingTime, "", totalCustomerSpends, totalIdleTimeOfServer});
+        tableModel.addRow(new Object[]{"Total", totalInterarrivalTime, "", totalServiceTime, "", totalWaitingTime, "", totalCustomerSpends, totalIdleTimeOfServer});
         
         // Calculate performance metrics
         double avgWaitingTime = (double) totalWaitingTime / (customerNumber-1);
