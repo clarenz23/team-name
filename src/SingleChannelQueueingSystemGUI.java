@@ -34,7 +34,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         inputPanel.setBorder(BorderFactory.createTitledBorder("Simulation"));
         inputPanel.setLayout(new GridLayout(2, 2));
 
-        // Add the termination option combo box
+        // Add the termination option
         terminationOptionLabel = new JLabel("Termination Option:");
         terminationOptionCombo = new JComboBox<String>(new String[]{"Based on number of customers", "Based on number of minutes"});
         inputPanel.add(terminationOptionLabel);
@@ -54,7 +54,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         add(inputPanel, BorderLayout.NORTH);
         add(startButton, BorderLayout.SOUTH);
 
-        // Create the table and table model
+        // Create the table
         tableModel = new DefaultTableModel(new String[]{"CUSTOMER NO.", "INTERARRIVAL TIME (MINS)", "ARRIVAL TIME (MINS)", "SERVICE TIME (MINS)", "TIME SERVICE BEGINS", "WAITING TIME", "TIME SERVICE ENDS", "CUSTOMER SPENDS IN SYSTEM", "IDLE TIME OF SERVER (MINS)"}, 0);
         table = new JTable(tableModel);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -110,7 +110,6 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         int numOfWaitingCustomers = 0;
         int totalIdleTimeOfServer = 0;
 
-        // Simulation table
         while ((option == 1 && customerNumber <= value) || (option == 2 && totalCustomerSpends < value)) {
             // Generate interarrival time based on distribution
             if (customerNumber == 1) {
