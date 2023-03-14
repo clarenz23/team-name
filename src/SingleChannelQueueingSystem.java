@@ -55,7 +55,7 @@ public class SingleChannelQueueingSystem {
         int totalIdleTimeOfServer = 0;
 
         // Simulation table
-        while ((option == 1 && customerNumber <= value) || (option == 2 && customerSpendsInSystem < value)) {
+        while ((option == 1 && customerNumber <= value) || (option == 2 && totalCustomerSpends < value)) {
             // Generate interarrival time based on distribution
             if (customerNumber == 1){
                 interarrivalTime = 0;
