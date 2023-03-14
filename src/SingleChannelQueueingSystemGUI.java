@@ -79,7 +79,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Create the Performance metrics panel
         JPanel statPanel = new JPanel();
         statPanel.setBorder(BorderFactory.createTitledBorder("Performance Metrics"));
-        statPanel.setPreferredSize(new Dimension(450,250));
+        statPanel.setPreferredSize(new Dimension(500,250));
         statPanel.setLayout(new GridLayout(8,2));
         
 
@@ -263,7 +263,12 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         String formatAvgServiceTime = String.format("%.2f", avgServiceTime);
         double avgInterarrivalTime = (double) totalInterarrivalTime / (customerNumber - 1);
         String formatAvgInterarrivalTime = String.format("%.2f", avgInterarrivalTime);
-        double avgQueueWaitTime = (double) totalWaitingTime / numOfWaitingCustomers;
+        double avgQueueWaitTime;
+        if (numOfWaitingCustomers == 0) {
+            avgQueueWaitTime = 0.0;
+        } else {
+            avgQueueWaitTime = (double) totalWaitingTime / numOfWaitingCustomers;
+        }
         String formatAvgQueueWaitTime = String.format("%.2f", avgQueueWaitTime);
         double avgCustomerSpends = (double) totalCustomerSpends/ (customerNumber-1);
         String formatAvgCustomerSpends = String.format("%.2f", avgCustomerSpends);
