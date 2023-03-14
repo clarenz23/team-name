@@ -3,8 +3,15 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class SingleChannelQueueingSystemGUI extends JFrame implements ActionListener {
@@ -12,14 +19,20 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
     private JComboBox<String> terminationOptionCombo;
     private JTextField valueField;
     private JButton startButton;
+    private JButton endButton;
     private JTable table;
     private DefaultTableModel tableModel;
+    private JLabel avgWaitingTimeLabel, probCustomerWaitsLabel, propIdleTimeLabel,
+            avgServiceTimeLabel, avgInterarrivalTimeLabel, avgQueueWaitTimeLabel, avgCustomerSpendsLabel, simulationTerminationLabel;
 
+    /**
+     * 
+     */
     public SingleChannelQueueingSystemGUI() {
         // Set up the GUI
         setTitle("Single Channel Queueing System Simulation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(1500, 750));
         setLayout(new BorderLayout());
 
         // Create the input panel
@@ -36,35 +49,84 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Add the value input field
         valueLabel = new JLabel("Value:");
         valueField = new JTextField();
+        valueField.setPreferredSize(new Dimension(100, 25));
         inputPanel.add(valueLabel);
         inputPanel.add(valueField);
 
         // Create the start button
         startButton = new JButton("Start Simulation");
         startButton.addActionListener(this);
+        startButton.setPreferredSize(new Dimension(200, 75));
 
-        // Add the input panel and start button to the GUI
-        add(inputPanel, BorderLayout.NORTH);
-        add(startButton, BorderLayout.SOUTH);
+        // Create the end button
+        endButton = new JButton("End Simulation");
+        endButton.addActionListener(e -> System.exit(0));
+        endButton.setPreferredSize(new Dimension(200, 75));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(startButton);
+        buttonPanel.add(endButton);
 
         // Create the table
         tableModel = new DefaultTableModel(new String[]{"CUSTOMER NO.", "INTERARRIVAL TIME (MINS)", "ARRIVAL TIME (MINS)", "SERVICE TIME (MINS)", "TIME SERVICE BEGINS", "WAITING TIME", "TIME SERVICE ENDS", "CUSTOMER SPENDS IN SYSTEM", "IDLE TIME OF SERVER (MINS)"}, 0);
         table = new JTable(tableModel);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        for (int i = 0; i < 9; i++) {
-            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
-
-        // Set the grid color to be the same as the background color
-        table.setGridColor(table.getBackground());
-
         // Add the table to a scroll pane and add the scroll pane to the GUI
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
+        // Create the Performance metrics panel
+        JPanel statPanel = new JPanel();
+        statPanel.setBorder(BorderFactory.createTitledBorder("Performance Metrics"));
+        statPanel.setPreferredSize(new Dimension(450,250));
+        statPanel.setLayout(new GridLayout(8,2));
+        
+
+        // Add the performance metrics labels
+        avgInterarrivalTimeLabel = new JLabel("Average interarrival time:");
+        statPanel.add(avgInterarrivalTimeLabel);
+        avgInterarrivalTimeLabel.setLabelFor(table);
+
+        avgServiceTimeLabel = new JLabel("Average service time:");
+        statPanel.add(avgServiceTimeLabel);
+        avgServiceTimeLabel.setLabelFor(table);
+
+        propIdleTimeLabel = new JLabel("Proportion of time server is idle:");
+        statPanel.add(propIdleTimeLabel);
+        propIdleTimeLabel.setLabelFor(table);
+
+        avgWaitingTimeLabel = new JLabel("Average waiting time:");
+        statPanel.add(avgWaitingTimeLabel);
+        avgWaitingTimeLabel.setLabelFor(table);
+
+        probCustomerWaitsLabel = new JLabel("Probability that a customer waits:");
+        statPanel.add(probCustomerWaitsLabel);
+        probCustomerWaitsLabel.setLabelFor(table);
+
+        avgQueueWaitTimeLabel = new JLabel("Average queue wait time:");
+        statPanel.add(avgQueueWaitTimeLabel);
+        avgQueueWaitTimeLabel.setLabelFor(table);
+
+        avgCustomerSpendsLabel = new JLabel("Average customer spends in system:");
+        statPanel.add(avgCustomerSpendsLabel);
+        avgCustomerSpendsLabel.setLabelFor(table);
+
+        // Add the performance metrics values
+        statPanel.add(new JLabel());
+        statPanel.add(new JLabel());
+        statPanel.add(new JLabel());
+        statPanel.add(new JLabel());
+        statPanel.add(new JLabel());
+        statPanel.add(new JLabel());
+        statPanel.add(new JLabel());
+        statPanel.add(new JLabel());
+
+        // Add the input panel and start button to the GUI
+        add(inputPanel, BorderLayout.NORTH);
+        add(buttonPanel, BorderLayout.PAGE_END);
+        add(statPanel, BorderLayout.EAST);
+        
         // Pack and display the GUI
         pack();
         setLocationRelativeTo(null);
@@ -189,29 +251,30 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
             numCustomersInQueue--;
         }
         tableModel.addRow(new Object[]{"", totalInterarrivalTime, "", totalServiceTime, "", totalWaitingTime, "", totalCustomerSpends, totalIdleTimeOfServer});
-
+        
         // Calculate performance metrics
-        double avgWaitingTime = (double) totalWaitingTime / (customerNumber - 1);
+        double avgWaitingTime = (double) totalWaitingTime / (customerNumber-1);
         String formatAvgWaitingTime = String.format("%.2f", avgWaitingTime);
-        double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber - 1) * 100;
-        String formatProbCustomerWaits = String.format("%.2f%%", probCustomerWaits);
-        double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds * 100;
-        String formatPropIdleTime = String.format("%.2f%%", propIdleTime);
-        double avgServiceTime = (double) totalServiceTime / (customerNumber - 1);
+        double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber-1);
+        String formatProbCustomerWaits = String.format("%.2f", probCustomerWaits);
+        double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds;
+        String formatPropIdleTime = String.format("%.2f", propIdleTime);
+        double avgServiceTime = (double) totalServiceTime / (customerNumber-1);
         String formatAvgServiceTime = String.format("%.2f", avgServiceTime);
         double avgInterarrivalTime = (double) totalInterarrivalTime / (customerNumber - 1);
         String formatAvgInterarrivalTime = String.format("%.2f", avgInterarrivalTime);
         double avgQueueWaitTime = (double) totalWaitingTime / numOfWaitingCustomers;
         String formatAvgQueueWaitTime = String.format("%.2f", avgQueueWaitTime);
-        double avgCustomerSpends = (double) totalCustomerSpends / (customerNumber - 1);
+        double avgCustomerSpends = (double) totalCustomerSpends/ (customerNumber-1);
         String formatAvgCustomerSpends = String.format("%.2f", avgCustomerSpends);
 
-        tableModel.addRow(new Object[]{"Average waiting time for a customer: ", "" + formatAvgWaitingTime + " minutes"});
-        tableModel.addRow(new Object[]{"Probability that a customer waits: ", "" + formatProbCustomerWaits});
-        tableModel.addRow(new Object[]{"Proportion of time server is idle: ", "" + formatPropIdleTime});
-        tableModel.addRow(new Object[]{"Average service time per customer: ", "" + formatAvgServiceTime + " minutes"});
-        tableModel.addRow(new Object[]{"Average interarrival time between customers: ", "" + formatAvgInterarrivalTime + " minutes"});
-        tableModel.addRow(new Object[]{"Average queue wait time for a customer: ", "" + formatAvgQueueWaitTime + " minutes"});
-        tableModel.addRow(new Object[]{"Average customer spends in the system: ", "" + formatAvgCustomerSpends + " minutes"});
+        avgWaitingTimeLabel.setText("Average Waiting Time: " + formatAvgWaitingTime);
+        probCustomerWaitsLabel.setText("Probability that a Customer Waits: " + formatProbCustomerWaits);
+        propIdleTimeLabel.setText("Probability of Idle Time: " + formatPropIdleTime);
+        avgServiceTimeLabel.setText("Average Service Time: " + formatAvgServiceTime);
+        avgInterarrivalTimeLabel.setText("Average Interarrival Time: " + formatAvgInterarrivalTime);
+        avgQueueWaitTimeLabel.setText("Average Queue Waiting Time: " + formatAvgQueueWaitTime);
+        avgCustomerSpendsLabel.setText("Average Customer Spends: " + formatAvgCustomerSpends);
+
     }
 }
