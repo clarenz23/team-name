@@ -5,33 +5,50 @@ public class SingleChannelQueueingSystem {
         Scanner scanner = new Scanner(System.in);
 
         boolean endProgram = false;
-        while (!endProgram) {
-            System.out.println("""
-                        Please choose the simulation termination option!
-                        \t1. Based on number of customers
-                        \t2. Based on number of minutes
-                        \t3. End program""");
-            System.out.print("Enter your choice (1, 2, or 3): ");
-            int option = scanner.nextInt();
+       while (!endProgram) {
+    System.out.println("""
+                Please choose the simulation termination option!
+                \t1. Based on number of customers
+                \t2. Based on number of minutes
+                \t3. End program""");
+    System.out.print("Enter your choice (1, 2, or 3): ");
+    String input = scanner.next();
 
-            int value = 0;
-            if (option == 1) {
-                System.out.print("Enter the number of customers to simulate: ");
-                value = scanner.nextInt();
-            } else if (option == 2) {
-                System.out.print("Enter the number of minutes to simulate: ");
-                value = scanner.nextInt();
-            } else if (option == 3) {
-                endProgram = true;
-            } else {
-                System.out.println("Invalid option selected.");
-                continue;
-            }
+    // Validate input
+    int option = 0;
+    try {
+        option = Integer.parseInt(input);
+        if (option < 1 || option > 3) {
+            System.out.println("Invalid option selected.");
+            continue;
+        }
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid input. Please enter a number between 1 and 3.");
+        continue;
+    }
 
-            if (endProgram) {
-                break;
-            }
+    int value = 0;
+    if (option == 1) {
+        System.out.print("Enter the number of customers to simulate: ");
+    } else if (option == 2) {
+        System.out.print("Enter the number of minutes to simulate: ");
+    } else if (option == 3) {
+        endProgram = true;
+        continue;
+    }
 
+    // Validate input
+    input = scanner.next();
+    try {
+        value = Integer.parseInt(input);
+        if (value <= 0) {
+            System.out.println("Invalid input. Please enter a positive integer.");
+            continue;
+        }
+    } catch (NumberFormatException e) {
+        System.out.println("Invalid input. Please enter a positive integer.");
+        continue;
+    }
         System.out.println("\nSimulation table:\n");
         System.out.println("CUSTOMER NO. | INTERARRIVAL TIME (MINS) | ARRIVAL TIME (MINS) | SERVICE TIME (MINS) | TIME SERVICE BEGINS | WAITING TIME | TIME SERVICE ENDS | CUSTOMER SPENDS IN SYSTEM | IDLE TIME OF SERVER (MINS)");
 
