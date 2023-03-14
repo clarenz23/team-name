@@ -136,7 +136,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Add the input panel and start button to the GUI
         add(inputPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.PAGE_END);
-        add(statPanel, BorderLayout.EAST);
+        add(statPanel, BorderLayout.PAGE_END);
 
         // Pack and display the GUI
         pack();
