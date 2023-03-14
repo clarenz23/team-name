@@ -3,15 +3,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class SingleChannelQueueingSystemGUI extends JFrame implements ActionListener {
@@ -48,11 +42,25 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         inputPanel.add(terminationOptionCombo);
 
         // Add the value input field
-        valueLabel = new JLabel("Value:");
+        valueLabel = new JLabel("Enter a number:");
         valueField = new JTextField();
         valueField.setPreferredSize(new Dimension(100, 25));
         inputPanel.add(valueLabel);
         inputPanel.add(valueField);
+
+        // Add a KeyListener to validate the input and display an error message
+        valueField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+                    // Display an error message if the input is not a valid digit
+                    JOptionPane.showMessageDialog(inputPanel, "Invalid input. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                    // Consume the key event to prevent the invalid character from being entered
+                    e.consume();
+                }
+            }
+        });
 
         // Create the start button
         startButton = new JButton("Start Simulation");
@@ -136,7 +144,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Add the input panel and start button to the GUI
         add(inputPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.PAGE_END);
-        add(statPanel, BorderLayout.PAGE_END);
+        add(statPanel, BorderLayout.EAST);
 
         // Pack and display the GUI
         pack();
