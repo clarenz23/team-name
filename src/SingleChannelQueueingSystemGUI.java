@@ -80,7 +80,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         JPanel statPanel = new JPanel();
         statPanel.setBorder(BorderFactory.createTitledBorder("Performance Metrics"));
         statPanel.setPreferredSize(new Dimension(300,280));
-        statPanel.setLayout(new GridLayout(8,1));
+        statPanel.setLayout(new GridLayout(0,1));
         
 
         // Add the performance metrics labels
