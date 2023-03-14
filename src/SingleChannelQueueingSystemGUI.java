@@ -3,15 +3,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class SingleChannelQueueingSystemGUI extends JFrame implements ActionListener {
@@ -58,6 +51,15 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         tableModel = new DefaultTableModel(new String[]{"CUSTOMER NO.", "INTERARRIVAL TIME (MINS)", "ARRIVAL TIME (MINS)", "SERVICE TIME (MINS)", "TIME SERVICE BEGINS", "WAITING TIME", "TIME SERVICE ENDS", "CUSTOMER SPENDS IN SYSTEM", "IDLE TIME OF SERVER (MINS)"}, 0);
         table = new JTable(tableModel);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        for (int i = 0; i < 9; i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        // Set the grid color to be the same as the background color
+        table.setGridColor(table.getBackground());
 
         // Add the table to a scroll pane and add the scroll pane to the GUI
         JScrollPane scrollPane = new JScrollPane(table);
@@ -188,5 +190,28 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         }
         tableModel.addRow(new Object[]{"", totalInterarrivalTime, "", totalServiceTime, "", totalWaitingTime, "", totalCustomerSpends, totalIdleTimeOfServer});
 
+        // Calculate performance metrics
+        double avgWaitingTime = (double) totalWaitingTime / (customerNumber - 1);
+        String formatAvgWaitingTime = String.format("%.2f", avgWaitingTime);
+        double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber - 1) * 100;
+        String formatProbCustomerWaits = String.format("%.2f%%", probCustomerWaits);
+        double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds * 100;
+        String formatPropIdleTime = String.format("%.2f%%", propIdleTime);
+        double avgServiceTime = (double) totalServiceTime / (customerNumber - 1);
+        String formatAvgServiceTime = String.format("%.2f", avgServiceTime);
+        double avgInterarrivalTime = (double) totalInterarrivalTime / (customerNumber - 1);
+        String formatAvgInterarrivalTime = String.format("%.2f", avgInterarrivalTime);
+        double avgQueueWaitTime = (double) totalWaitingTime / numOfWaitingCustomers;
+        String formatAvgQueueWaitTime = String.format("%.2f", avgQueueWaitTime);
+        double avgCustomerSpends = (double) totalCustomerSpends / (customerNumber - 1);
+        String formatAvgCustomerSpends = String.format("%.2f", avgCustomerSpends);
+
+        tableModel.addRow(new Object[]{"Average waiting time for a customer: ", "" + formatAvgWaitingTime + " minutes"});
+        tableModel.addRow(new Object[]{"Probability that a customer waits: ", "" + formatProbCustomerWaits});
+        tableModel.addRow(new Object[]{"Proportion of time server is idle: ", "" + formatPropIdleTime});
+        tableModel.addRow(new Object[]{"Average service time per customer: ", "" + formatAvgServiceTime + " minutes"});
+        tableModel.addRow(new Object[]{"Average interarrival time between customers: ", "" + formatAvgInterarrivalTime + " minutes"});
+        tableModel.addRow(new Object[]{"Average queue wait time for a customer: ", "" + formatAvgQueueWaitTime + " minutes"});
+        tableModel.addRow(new Object[]{"Average customer spends in the system: ", "" + formatAvgCustomerSpends + " minutes"});
     }
 }
