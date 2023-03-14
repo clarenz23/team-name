@@ -161,10 +161,10 @@ public class SingleChannelQueueingSystem {
             // Calculate performance metrics
             double avgWaitingTime = (double) totalWaitingTime / (customerNumber-1);
             String formatAvgWaitingTime = String.format("%.2f", avgWaitingTime);
-            double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber-1);
-            String formatProbCustomerWaits = String.format("%.2f", probCustomerWaits);
-            double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds;
-            String formatPropIdleTime = String.format("%.2f", propIdleTime);
+            double probCustomerWaits = (double) numOfWaitingCustomers / (customerNumber-1) * 100;
+            String formatProbCustomerWaits = String.format("%.2f%%", probCustomerWaits);
+            double propIdleTime = (double) totalIdleTimeOfServer / timeServiceEnds * 100;
+            String formatPropIdleTime = String.format("%.2f%%", propIdleTime);
             double avgServiceTime = (double) totalServiceTime / (customerNumber-1);
             String formatAvgServiceTime = String.format("%.2f", avgServiceTime);
             double avgInterarrivalTime = (double) totalInterarrivalTime / (customerNumber - 1);
