@@ -1,1 +1,16 @@
+import java.util.Scanner;
+
+public class TeamJMCGMidAct02 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the simulation time (minutes): ");
+        String input = sc.next();
+
+        System.out.println("\nSimulation Table");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("|       Just Finished Event        |   Variables    |                     Attributes                    |         Statistical Accumulators           |");
+        System.out.println("|  ENTITY NO | TIME T | EVENT TYPE |  Q (T) | B(T)  |  ARRIVAL TIME IN QUEUE | ARRIVAL TIME IN SERVICE  |  P | N | ΣWQ | WQ* | ΣTS | ∫Q | Q* | ∫B    |");
+    }
+}
 
