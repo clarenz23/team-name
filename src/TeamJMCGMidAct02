@@ -1,16 +1,122 @@
 import java.util.Scanner;
 
 public class TeamJMCGMidAct02 {
+
+    static final int MAX_CUSTOMERS = 11;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter the simulation time (minutes): ");
-        String input = sc.next();
+        System.out.print("Enter the simulation time in minutes: ");
+        int simulationTime = sc.nextInt();
 
         System.out.println("\nSimulation Table");
-        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.println("|       Just Finished Event        |   Variables    |                     Attributes                    |         Statistical Accumulators           |");
-        System.out.println("|  ENTITY NO | TIME T | EVENT TYPE |  Q (T) | B(T)  |  ARRIVAL TIME IN QUEUE | ARRIVAL TIME IN SERVICE  |  P | N | ΣWQ | WQ* | ΣTS | ∫Q | Q* | ∫B    |");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("|      Just Finished Event        |  Variables   |                     Attributes                  |         Statistical Accumulators         |");
+        System.out.println("| ENTITY NO | TIME T | EVENT TYPE | Q (T) | B(T) | ARRIVAL TIME IN QUEUE | ARRIVAL TIME IN SERVICE |  P | N | ΣWQ | WQ* | ΣTS | ∫Q | Q* | ∫B  |");
+    
+        double[] arrivalTime = new double[MAX_CUSTOMERS];
+        double[] interArrivalTime = new double[MAX_CUSTOMERS];
+        double[] serviceTime = new double[MAX_CUSTOMERS];
+        int numCustomers = 0;
+        double currentTime = 0.0;
+        double[] timeServiceBegin = new double[MAX_CUSTOMERS];
+        double[] timeServiceEnd = new double[MAX_CUSTOMERS];
+        double[] timeCustomerSpendsInSystem = new double[MAX_CUSTOMERS];
+        double[] timeCustomerSpendsInQueue = new double[MAX_CUSTOMERS];
+        double[] timeLastEvent = new double[MAX_CUSTOMERS];
+        int numCustomersInQueue = 0;
+        double areaNumCustomersInQueue = 0.0;
+        double timeLastCustomerDeparture = 0.0;
+        double areaUnderNumCustomersInQueue = 0.0;
+        double areaUnderNumBusyServers = 0.0;
+
+        arrivalTime[1] = 0.0;
+        interArrivalTime[1] = 1.73;
+        serviceTime[1] = 2.90;
+        numCustomers = 1;
+
+        while (currentTime < simulationTime) {
+            // Determine the next event type and time
+            int nextEventType = 0;
+            double nextEventTime = Double.MAX_VALUE;
+            for (int i = 1; i <= numCustomers; i++) {
+                if (timeServiceBegin[i] > 0 && timeServiceBegin[i] < nextEventTime) {
+                    nextEventType = i;
+                    nextEventTime = timeServiceBegin[i];
+                }
+                if (timeServiceEnd[i] > 0 && timeServiceEnd[i] < nextEventTime) {
+                    nextEventType = -i;
+                    nextEventTime = timeServiceEnd[i];
+                }
+                if (arrivalTime[i] < nextEventTime) {
+                    nextEventType = numCustomers + 1;
+                    nextEventTime = arrivalTime[i];
+                }
+            }
+
+            double timeSinceLastEvent = nextEventTime - currentTime;
+            areaNumCustomersInQueue += numCustomersInQueue * timeSinceLastEvent;
+            areaUnderNumCustomersInQueue += (numCustomersInQueue * timeSinceLastEvent * (numCustomersInQueue - 1)) / 2;
+            areaUnderNumBusyServers += (timeSinceLastEvent / interArrivalTime[1]) * (numCustomers - numCustomersInQueue);
+
+            // Update current time
+            currentTime = nextEventTime;
+
+            // Handle next event
+            if (nextEventType > 0) {
+                // Customer arrives
+                numCustomers++;
+                arrivalTime[numCustomers] = currentTime + interArrivalTime[numCustomers];
+                interArrivalTime[numCustomers] = 1.73; // Replace with appropriate inter-arrival time
+                serviceTime[numCustomers] = 2.90; // Replace with appropriate service time
+                if (numCustomersInQueue == 0) {
+                    // Customer goes directly into service
+                    timeServiceBegin[numCustomers] = currentTime;
+                    timeServiceEnd[numCustomers] = currentTime + serviceTime[numCustomers];
+                } else {
+                    // Customer joins the queue
+                    numCustomersInQueue++;
+                }
+    
+                // Schedule the next arrival
+                if (numCustomers < MAX_CUSTOMERS) {
+                    double nextArrivalTime = currentTime + interArrivalTime[numCustomers + 1];
+                    arrivalTime[numCustomers + 1] = nextArrivalTime;
+                }
+            } else if (nextEventType < 0) {
+                // Customer departs
+                int customerNumber = -nextEventType;
+                timeCustomerSpendsInSystem[customerNumber] = currentTime - arrivalTime[customerNumber];
+                timeCustomerSpendsInQueue[customerNumber] = timeServiceBegin[customerNumber] - arrivalTime[customerNumber];
+    
+                timeLastCustomerDeparture = currentTime;
+    
+                if (numCustomersInQueue > 0) {
+                    // Take the next customer from the queue and put them into service
+                    numCustomersInQueue--;
+                    int nextCustomerInQueue = customerNumber + 1;
+    
+                    timeServiceBegin[nextCustomerInQueue] = currentTime;
+                    timeServiceEnd[nextCustomerInQueue] = currentTime + serviceTime[nextCustomerInQueue];
+                } else {
+                    // No customers waiting, so set server as idle
+                    timeServiceBegin[customerNumber] = 0.0;
+                    timeServiceEnd[customerNumber] = 0.0;
+                }
+            } else {
+                // Server becomes available
+                numCustomersInQueue--;
+    
+                // Put the next customer in queue into service
+                int nextCustomerInQueue = numCustomers - numCustomersInQueue;
+    
+                timeServiceBegin[nextCustomerInQueue] = currentTime;
+                timeServiceEnd[nextCustomerInQueue] = currentTime + serviceTime[nextCustomerInQueue];
+            }
+    
+            // Update last event time for each customer
+            for (int i = 1; i <= numCustomers; i++) {
+                timeLastEvent[i] = currentTime;
+            }
+        }
     }
 }
-
