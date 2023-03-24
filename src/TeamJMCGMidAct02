@@ -116,6 +116,22 @@ public class TeamJMCGMidAct02 {
             // Update last event time for each customer
             for (int i = 1; i <= numCustomers; i++) {
                 timeLastEvent[i] = currentTime;
+                
+                 /*
+                // Track Statistical Accumulations
+                System.out.println("\nStatistical Accumulations");
+                System.out.println("Number of parts produced So far                    = " +  + " parts");
+                System.out.println("Total of the waiting times in queue so far   = " +  + " minutes");
+                System.out.println("Number of parts that have passed through the queue so far                  = " + );
+                System.out.println("Longest time spent in queue we’ve seen so far                                   = " +  + " parts");
+                System.out.println("Total of the time spent in the system by all parts that have departed so far                         = " +  + " minutes");
+                System.out.println("Longest time in system we’ve seen so far      = " +  + " minutes");
+                System.out.println("Area so far under the queue-length curve Q ( t )           = " +  +);
+                System.out.println("Highest level that Q ( t ) has so far attained= " +  + );
+                System.out.println("Area so far under the server-busy function B (t) =  +  + );
+                System.out.println();
+
+       */
             }
         }
     }
