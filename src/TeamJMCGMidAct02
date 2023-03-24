@@ -9,9 +9,9 @@ public class TeamJMCGMidAct02 {
         int simulationTime = sc.nextInt();
 
         System.out.println("\nSimulation Table");
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.println("|      Just Finished Event        |  Variables   |                     Attributes                  |         Statistical Accumulators         |");
-        System.out.println("| ENTITY NO | TIME T | EVENT TYPE | Q (T) | B(T) | ARRIVAL TIME IN QUEUE | ARRIVAL TIME IN SERVICE |  P | N | ΣWQ | WQ* | ΣTS | ∫Q | Q* | ∫B  |");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("|      Just Finished Event        |  Variables   |                     Attributes                  |            Statistical Accumulators            |");
+        System.out.println("| ENTITY NO | TIME T | EVENT TYPE | Q (T) | B(T) | ARRIVAL TIME IN QUEUE | ARRIVAL TIME IN SERVICE |  P | N | ΣWQ | WQ* | ΣTS | TS* | ∫Q | Q* | ∫B  |");
     
         double[] arrivalTime = new double[MAX_CUSTOMERS];
         double[] interArrivalTime = new double[MAX_CUSTOMERS];
