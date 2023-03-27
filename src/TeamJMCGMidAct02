@@ -103,6 +103,14 @@ public class TeamJMCGMidAct02 {
           } else {
             break;
           }
+
+          if (numParts == NUM_CUSTOMERS) {
+            break;
+          }
+
+          if (nextEventTime > simTime) {
+            nextEventTime = simTime;
+          }
   
         double timeUntilNextEvent = nextEventTime - time;
         areaUnderQueueLengthCurve += numPartsInQueue * timeUntilNextEvent;
