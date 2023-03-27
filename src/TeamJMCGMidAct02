@@ -1,37 +1,33 @@
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
 
 public class TeamJMCGMidAct02 {
-  
-  // Define the arrival, interarrival, and service times
+
     private static final double[][] CUSTOMER_DATA = {
-            {1, 0.00, 1.73, 2.90},
-            {2, 1.73, 1.35, 1.76},
-            {3, 3.08, 0.71, 3.39},
-            {4, 3.79, 0.62, 4.52},
-            {5, 4.41, 14.28, 4.46},
-            {6, 18.69, 0.70, 4.36},
-            {7, 19.39, 15.52, 2.07},
-            {8, 34.91, 3.15, 3.36},
-            {9, 38.06, 1.76, 2.37},
-            {10, 39.82, 1.00, 5.38},
-            {11, 40.82, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}
+        {1, 0.00, 1.73, 2.90},
+        {2, 1.73, 1.35, 1.76},
+        {3, 3.08, 0.71, 3.39},
+        {4, 3.79, 0.62, 4.52},
+        {5, 4.41, 14.28, 4.46},
+        {6, 18.69, 0.70, 4.36},
+        {7, 19.39, 15.52, 2.07},
+        {8, 34.91, 3.15, 3.36},
+        {9, 38.06, 1.76, 2.37},
+        {10, 39.82, 1.00, 5.38},
+        {11, 40.82, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}
     };
-
     private static final int NUM_CUSTOMERS = CUSTOMER_DATA.length;
+    private static double time;
+    private static Queue<Integer> queue;
+    private static boolean isBusy;
 
-    private static double time; // The current time of the simulation
-    private static Queue<Integer> queue; // The queue of parts waiting to be processed
-    private static boolean isBusy; // Whether the drill press is currently processing a part
-
-    // Initialize the simulation
     private static void init() {
         time = 0;
         queue = new LinkedList<>();
         isBusy = false;
     }
 
-    // Schedule the arrival of a new part
     private static void scheduleArrival() {
         double interarrivalTime = CUSTOMER_DATA[0][2];
         double arrivalTime = time + interarrivalTime;
@@ -44,7 +40,6 @@ public class TeamJMCGMidAct02 {
         CUSTOMER_DATA[0][3] = Double.POSITIVE_INFINITY;
     }
 
-    // Process the next part in the queue
     private static void processPart() {
         int customerNo = queue.remove();
         double serviceTime = CUSTOMER_DATA[customerNo][3];
@@ -56,11 +51,11 @@ public class TeamJMCGMidAct02 {
         CUSTOMER_DATA[customerNo][2] = Double.POSITIVE_INFINITY;
         CUSTOMER_DATA[customerNo][3] = Double.POSITIVE_INFINITY;
     }
-  
-  // Print the statistical accumulators
+
+    // Print the statistical accumulators
     private static void printStats(int numParts, double totalWaitTime, int numPartsInQueue,
-      double longestQueueTime, double totalTimeInSystem, double longestSystemTime,
-      double areaUnderQueueLengthCurve, double areaUnderSystemLengthCurve) {
+                                   double longestQueueTime, double totalTimeInSystem, double longestSystemTime,
+                                   double areaUnderQueueLengthCurve, double areaUnderSystemLengthCurve) {
         System.out.println("Simulation completed.\n");
         System.out.println("Number of parts processed: " + numParts);
         System.out.println("Average time spent waiting in queue: " + (totalWaitTime / numParts));
@@ -73,24 +68,31 @@ public class TeamJMCGMidAct02 {
         }
 
     public static void main(String[] args) {
-        init(); // Initialize the simulation
-        System.out.printf("%4s  %7s  %7s  %9s  %9s  %9s  %9s%n",
+
+      Scanner sc = new Scanner(System.in);
+      System.out.print("Enter the simulation time (minutes): ");
+      double simTime = sc.nextDouble();
+
+
+      init(); // Initialize the simulation
+      System.out.printf("%4s  %7s  %7s  %9s  %9s  %9s  %9s%n",
     "Part", "Arrival", "Interarr", "Wait Time", "Departure", "Service", "System");
 
-        scheduleArrival(); // Schedule the first arrival
+      scheduleArrival(); // Schedule the first arrival
 
-        // Run the simulation until all parts have been processed
-        int numParts = 0;
-        double totalWaitTime = 0;
-        int numPartsInQueue = 0;
-        double longestQueueTime = 0;
-        double totalTimeInSystem = 0;
-        double longestSystemTime = 0;
-        double areaUnderQueueLengthCurve = 0;
-          double areaUnderSystemLengthCurve = 0;
+      // Run the simulation until all parts have been processed
+      int numParts = 0;
+      double totalWaitTime = 0;
+      int numPartsInQueue = 0;
+      double longestQueueTime = 0;
+      double totalTimeInSystem = 0;
+      double longestSystemTime = 0;
+      double areaUnderQueueLengthCurve = 0;
+      double areaUnderSystemLengthCurve = 0;
 
-        while (numParts < NUM_CUSTOMERS) {
-          double nextEventTime;
+
+      while (time < simTime && numParts < NUM_CUSTOMERS) {
+        double nextEventTime;
   
           if (isBusy && !queue.isEmpty()) {
             nextEventTime = time + CUSTOMER_DATA[queue.peek()][3];
@@ -125,6 +127,7 @@ public class TeamJMCGMidAct02 {
         }
   
         numPartsInQueue += queue.size();
+        sc.close();
       }
 
       printStats(numParts, totalWaitTime, numPartsInQueue, longestQueueTime, totalTimeInSystem,
