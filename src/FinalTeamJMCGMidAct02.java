@@ -1,9 +1,12 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class FinalTeamJMCGMidAct02 {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
         String filePath = "res/data.csv";
         int[] arrivalTimes = new int[11];
         int[] interarrivalTimes = new int[11];
@@ -25,7 +28,8 @@ public class FinalTeamJMCGMidAct02 {
         }
 
         // Get simulation time from user
-        int simulationTime = 0; // TODO: get user input
+        System.out.print("Enter the simulation time (in minutes): ");
+        double simulationTime = sc.nextDouble();
 
         // Initialize statistical accumulators
         int partsProduced = 0;
