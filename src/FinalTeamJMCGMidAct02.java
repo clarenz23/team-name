@@ -59,7 +59,19 @@ public class FinalTeamJMCGMidAct02 {
 
             // @Enrico Castro
             // Update statistical accumulators
-            // TODO: update statistical accumulators
+            int queueLength = numInQueue;
+            totalSystemTime += queueLength + (nextDepartureTime - clock);
+            longestSystemTime = Math.max(longestSystemTime, queueLength + (nextDepartureTime - clock));
+            queueLengthArea += queueLength * (nextEventTime - clock);
+            highestQueueLength = Math.max(highestQueueLength, queueLength);
+            serverBusyArea += (event == 2) ? (nextEventTime - clock) : 0;
+            if (event == 1 && queueLength == 0) {
+                totalQueueWaitTime += 0;
+            } else if (event == 1) {
+                totalQueueWaitTime += (nextDepartureTime - clock) - serviceTimes[11 - numInQueue];
+            } else if (event == 2) {
+                partsProduced++;
+            }
 
             // @Joanne Mangsat
             // Perform event
