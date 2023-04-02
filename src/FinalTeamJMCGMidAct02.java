@@ -77,15 +77,23 @@ public class FinalTeamJMCGMidAct02 {
             // Perform event
             if (event == 1) { // arrival event
                 // TODO: handle arrival event
+                numInQueue++;
+                if (numInQueue == 1) {
+                    nextDepartureTime = clock + serviceTimes[11 - numInQueue];
+                }
+                int index = getNextArrivalTime(nextArrivalTime);
+                nextArrivalTime[index] = clock + interarrivalTimes[index];
             } else { // departure event
                 // TODO: handle departure event
+                numInQueue--;
+                if (numInQueue > 0) {
+                    nextDepartureTime = clock + serviceTimes[11 - numInQueue];
+                } else {
+                    nextDepartureTime = Integer.MAX_VALUE;
+                }
             }
         }
-
-        // @Danielle Javier
-        // Print simulation results
-        // TODO: print simulation results
-    }
+            }
 
     private static int getNextArrivalTime(int[] nextArrivalTime) {
         int minTime = Integer.MAX_VALUE;
@@ -96,4 +104,10 @@ public class FinalTeamJMCGMidAct02 {
         }
         return minTime;
     }
+
+    // @Danielle Javier
+    // Print simulation results
+    // TODO: print simulation results
 }
+
+
