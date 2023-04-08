@@ -57,8 +57,6 @@ public class FinalTeamJMCGMidAct02 {
             int nextEventTime = Math.min(nextDepartureTime, getNextArrivalTime(nextArrivalTime));
             int event = (nextEventTime == nextDepartureTime) ? 2 : 1;
 
-            // @Enrico Castro
-            // Update statistical accumulators
             int queueLength = numInQueue;
             totalSystemTime += queueLength + (nextDepartureTime - clock);
             longestSystemTime = Math.max(longestSystemTime, queueLength + (nextDepartureTime - clock));
@@ -73,7 +71,6 @@ public class FinalTeamJMCGMidAct02 {
                 partsProduced++;
             }
 
-            // @Joanne Mangsat
             // Perform event
             if (event == 1) { // arrival event
                 // TODO: handle arrival event
@@ -105,9 +102,18 @@ public class FinalTeamJMCGMidAct02 {
         return minTime;
     }
 
-    // @Danielle Javier
     // Print simulation results
-    // TODO: print simulation results
+    System.out.println("Simulation Results:");
+    System.out.println("Simulation Time (in minutes): " + simulationTime);
+    System.out.println("Total Parts Produced: " + partsProduced);
+    System.out.println("Total Queue Wait Time: " + totalQueueWaitTime);
+    System.out.println("Total Parts Passed Queue: " + partsPassedQueue);
+    System.out.println("Longest Queue Time: " + longestQueueTime);
+    System.out.println("Total System Time: " + totalSystemTime);
+    System.out.println("Longest System Time: " + longestSystemTime);
+    System.out.println("Queue Length Area: " + queueLengthArea);
+    System.out.println("Highest Queue Length: " + highestQueueLength);
+    System.out.println("Server Busy Area: " + serverBusyArea);
 }
 
 
