@@ -1,11 +1,47 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class RedoMidAct02 {
+
+    private static void statisticalAccumulators() {
+    }
+
+    private static void attributes() {
+    }
+
+    private static void variables() {
+    }
+
+    private static void justFinishedEvent() {
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+
+        while (true) {
+
+            // Get simulation time from user
+            System.out.print("Enter the simulation time (in minutes): ");
+            try {
+                double simulationTime = sc.nextDouble();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // consume the invalid input
+            }
+        }
+
+        // Start of Simulation
+        System.out.printf("%4s  %7s  %7s  %9s  %9s  %9s  %9s%n",
+                "Part", "Arrival", "Interarr", "Wait Time", "Departure", "Service", "System");
+
+        justFinishedEvent();
+        variables();
+        attributes();
+        statisticalAccumulators();
 
         String filePath = "res/data.csv";
         int[] arrivalTimes = new int[11];
@@ -31,38 +67,7 @@ public class RedoMidAct02 {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
-
-        // Get simulation time from user
-        double simulationTime;
-        while (true) {
-            try {
-                System.out.print("Enter the simulation time (in minutes): ");
-                simulationTime = sc.nextDouble();
-                break;
-            } catch (java.util.InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a number.");
-                sc.nextLine(); // consume the invalid input
-            }
-        }
-
-        justFinishedEvent();
-        variables();
-        attributes();
-        statisticalAccumulators();
-
     }
 
-    private static void statisticalAccumulators() {
-    }
-
-    private static void attributes() {
-    }
-
-    private static void variables() {
-    }
-
-    private static void justFinishedEvent() {
-    }
 }
