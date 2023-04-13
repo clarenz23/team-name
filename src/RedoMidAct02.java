@@ -113,7 +113,7 @@ public class RedoMidAct02 {
                 break;
             }
 
-            if (numParts == NUM_CUSTOMERS) {
+            if (producedParts == NUM_CUSTOMERS) {
                 break;
             }
 
@@ -126,13 +126,13 @@ public class RedoMidAct02 {
             areaUnderSystemLengthCurve += (entityNo + (isBusy ? 1 : 0)) * timeUntilNextEvent;
             currentTime = nextEventTime;
 
-            if (currentTime >= CUSTOMER_DATA[0][1] && numParts < NUM_CUSTOMERS) {
+            if (currentTime >= CUSTOMER_DATA[0][1] && producedParts < NUM_CUSTOMERS) {
                 scheduleArrival();
             }
 
             if (currentTime >= CUSTOMER_DATA[queue.peek()][1] && !isBusy) {
                 producedParts();
-                numParts++;
+                producedParts++;
                 double waitingTime = currentTime - CUSTOMER_DATA[queue.peek()][1];
                 totalWaitingTime += waitingTime;
                 maxWaitingTime = Math.max(maxWaitingTime, waitingTime);
