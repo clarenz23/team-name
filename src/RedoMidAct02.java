@@ -24,7 +24,7 @@ public class RedoMidAct02 {
     private static int[] serviceTimes = new int[11];
 
     private static void statisticalAccumulators() {
-        System.out.printf("%-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d%n", numPartsProduced, totalWaitingTime, numPartsProcessed,
+        System.out.printf("%-4d %-8.2f %-4d %-4d %-8.2f %-4d %-8.2f %-4d %-8.2f%n", numPartsProduced, totalWaitingTime, numPartsProcessed,
                 maxTimeInQueue, totalSystemTime, maxTimeInSystem, areaUnderQLength, highestQLength, areaUnderServerBusy);
     }
 
