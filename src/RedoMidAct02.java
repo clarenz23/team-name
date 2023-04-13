@@ -22,7 +22,7 @@ public class RedoMidAct02 {
     private static void statisticalAccumulators(int producedParts, int partsPassedQueue, double totalWaitingTime,
                                                 double maxWaitingTime, double totalTimeInSystem, double maxServiceTime,
                                                 double areaUnderQueueLengthCurve, int maxQueue, double areaUnderSystemLengthCurve) {
-        
+
         System.out.println("Simulation completed.\n");
         System.out.println("Number of parts processed: " + producedParts);
         System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts));
@@ -90,8 +90,5 @@ public class RedoMidAct02 {
         statisticalAccumulators(producedParts, partsPassedQueue, totalWaitingTime, maxWaitingTime, totalTimeInService,
                 maxServiceTime, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
-    }
-
-    private static void printStats() {
     }
 }
