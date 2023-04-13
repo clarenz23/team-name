@@ -39,6 +39,22 @@ public class RedoMidAct02 {
         CUSTOMER_DATA[0][3] = CUSTOMER_DATA[1][3];
     }
 
+    private static void producedParts() {
+        if (!queue.isEmpty()) {
+            int customerNo = queue.remove();
+            double serviceTime = CUSTOMER_DATA[customerNo][3];
+            double departureTime = currentTime + serviceTime;
+            double waitingTime = currentTime - CUSTOMER_DATA[customerNo][1];
+            System.out.printf("%4d  %7.2f  %7s  %9.2f  %9s  %9.2f  %9.2f%n",
+                    customerNo, currentTime, "-", CUSTOMER_DATA[customerNo][1], waitingTime, departureTime, serviceTime);
+            isBusy = true;
+            CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
+        }
+        else {
+            isBusy = false;
+        }
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -83,6 +99,52 @@ public class RedoMidAct02 {
                 totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
         scheduleArrival(); // Schedule the first arrival
+
+        while (currentTime < simulationTime) {
+            double nextEventTime;
+
+            if (isBusy && !queue.isEmpty()) {
+                nextEventTime = currentTime + CUSTOMER_DATA[queue.peek()][3];
+            } else if (isBusy) {
+                nextEventTime = Double.POSITIVE_INFINITY;
+            } else if (!queue.isEmpty()) {
+                nextEventTime = currentTime + CUSTOMER_DATA[queue.peek()][2];
+            } else {
+                break;
+            }
+
+            if (numParts == NUM_CUSTOMERS) {
+                break;
+            }
+
+            if (nextEventTime > simulationTime) {
+                nextEventTime = simulationTime;
+            }
+
+            double timeUntilNextEvent = nextEventTime - currentTime;
+            areaUnderQueueLengthCurve += entityInQueue * timeUntilNextEvent;
+            areaUnderSystemLengthCurve += (entityNo + (isBusy ? 1 : 0)) * timeUntilNextEvent;
+            currentTime = nextEventTime;
+
+            if (currentTime >= CUSTOMER_DATA[0][1] && numParts < NUM_CUSTOMERS) {
+                scheduleArrival();
+            }
+
+            if (currentTime >= CUSTOMER_DATA[queue.peek()][1] && !isBusy) {
+                producedParts();
+                numParts++;
+                double waitingTime = currentTime - CUSTOMER_DATA[queue.peek()][1];
+                totalWaitingTime += waitingTime;
+                maxWaitingTime = Math.max(maxWaitingTime, waitingTime);
+                double timeInSystem = currentTime - CUSTOMER_DATA[queue.peek()][1] + CUSTOMER_DATA[queue.peek()][3];
+                totalTimeInSystem += timeInSystem;
+                maxTimeInSystem = Math.max(maxTimeInSystem, timeInSystem);
+                isBusy = false;
+            }
+
+            entityInQueue += queue.size();
+            sc.close();
+        }
 
         System.out.println("Simulation completed.\n");
         System.out.println("Simulation time: " + simulationTime + "\n");
