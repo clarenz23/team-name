@@ -19,9 +19,19 @@ public class RedoMidAct02 {
         queue = new LinkedList<>();
         isBusy = false;
     }
-    private static void statisticalAccumulators(int producedParts, int partsPassedQueue, double sumOfWaitingTime,
-                                                double maxWaitingTime, double sumOfServiceTime, double maxServiceTime,
+    private static void statisticalAccumulators(int producedParts, int partsPassedQueue, double totalWaitingTime,
+                                                double maxWaitingTime, double totalTimeInSystem, double maxServiceTime,
                                                 double areaUnderQueueLengthCurve, int maxQueue, double areaUnderSystemLengthCurve) {
+        
+        System.out.println("Simulation completed.\n");
+        System.out.println("Number of parts processed: " + producedParts);
+        System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts));
+        System.out.println("Average number of parts in queue: " );
+        System.out.println("Longest time spent waiting in queue: " );
+        System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts));
+        System.out.println("Longest time spent in system: " );
+        System.out.println("Area under queue length curve: " + areaUnderQueueLengthCurve);
+        System.out.println("Area under system length curve: " + areaUnderSystemLengthCurve);
     }
 
     private static void attributes(double inQueue, double inService) {
@@ -49,27 +59,39 @@ public class RedoMidAct02 {
         System.out.printf("%-10s %-6s %-14s %-6s %-8s %-24s %-28s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s%n",
                 "Entity No", "Time t", "Event Type", "Q(t)", "B(t)", "Arrival Time in Queue", "Arrival Time in Service", "P", "N", "ΣW", "Q", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
 
+        //just finished event
         int entityNo = 0;
         double timeT = 0;
         String eventType = "";
+
+        //variables
         int entityInQueue = 0;
         int resource = 0;
+
+        //attributes
         double inQueue = 0;
         double inService = 0;
+
+        // statistical accumulators
         int producedParts = 0;
         int partsPassedQueue = 0;
-        double sumOfWaitingTime = 0;
+        double totalWaitingTime = 0;
         double maxWaitingTime = 0;
-        double sumOfServiceTime = 0;
+        double totalTimeInService = 0;
         double maxServiceTime = 0;
         double areaUnderQueueLengthCurve = 0;
         int maxQueue = 0;
         double areaUnderSystemLengthCurve = 0;
 
+
         justFinishedEvent(entityNo, timeT, eventType);
         variables(entityInQueue, resource);
         attributes(inQueue, inService);
-        statisticalAccumulators(producedParts, partsPassedQueue, sumOfWaitingTime, maxWaitingTime, sumOfServiceTime, maxServiceTime, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
+        statisticalAccumulators(producedParts, partsPassedQueue, totalWaitingTime, maxWaitingTime, totalTimeInService,
+                maxServiceTime, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
+    }
+
+    private static void printStats() {
     }
 }
