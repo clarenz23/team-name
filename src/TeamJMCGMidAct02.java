@@ -6,7 +6,7 @@ public class TeamJMCGMidAct02 {
 
     // Define a two-dimensional array of customer data
     // Each row represents a customer and each column represent a data point
-    // Column 0: Customer ID, Column 1: Arrival Time, Column 2: Service Time
+    // Column 0: Customer ID, Column 1: Arrival Time, Column 2: Interarrival Time, Column 3: Service Time
     private static final double[][] CUSTOMER_DATA = {
             {1, 0.00, 1.73, 2.90},
             {2, 1.73, 1.35, 1.76},
@@ -18,7 +18,7 @@ public class TeamJMCGMidAct02 {
             {8, 34.91, 3.15, 3.36},
             {9, 38.06, 1.76, 2.37},
             {10, 39.82, 1.00, 5.38},
-            {11, 40.82, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY}
+            {11, 40.82, Math.random(), Math.random()}
     };
     private static final int NUM_CUSTOMERS = CUSTOMER_DATA.length;
     private static double time;
@@ -52,7 +52,7 @@ public class TeamJMCGMidAct02 {
                 customerNo, time, "-", CUSTOMER_DATA[customerNo][1], waitingTime, departureTime, serviceTime);
         isBusy = true;
         CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
-        CUSTOMER_DATA[customerNo][3] = Double.POSITIVE_INFINITY;
+        //CUSTOMER_DATA[customerNo][3] = Double.POSITIVE_INFINITY;
 
     }
 

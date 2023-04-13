@@ -6,10 +6,21 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public class RedoMidAct02 {
-    private static final int NUM_CUSTOMERS = 11; // Number of customers to simulate
-    private static final double[] ARRIVAL_TIMES = {0.00, 1.73, 3.08, 3.79, 4.41, 18.69, 19.39, 34.91, 38.06, 39.82, 40.82}; // Arrival times for each customer
-    private static final double[] INTERARRIVAL_TIMES = {1.73, 1.35, 0.71, 0.62, 14.28, 0.70, 15.52, 3.15, 1.76, 1.00, 0.00}; // Interarrival times for each customer
-    private static final double[] SERVICE_TIMES = {2.90, 1.76, 3.39, 4.52, 4.46, 4.36, 2.07, 3.36, 2.37, 5.38, 0.00}; // Service times for each customer
+    // Column 0: Customer ID, Column 1: Arrival Time, Column 2: Service Time
+    private static final double[][] CUSTOMER_DATA = {
+            {1, 0.00, 1.73, 2.90},
+            {2, 1.73, 1.35, 1.76},
+            {3, 3.08, 0.71, 3.39},
+            {4, 3.79, 0.62, 4.52},
+            {5, 4.41, 14.28, 4.46},
+            {6, 18.69, 0.70, 4.36},
+            {7, 19.39, 15.52, 2.07},
+            {8, 34.91, 3.15, 3.36},
+            {9, 38.06, 1.76, 2.37},
+            {10, 39.82, 1.00, 5.38},
+            {11, 40.82, Math.random(), Math.random()}
+    };
+    private static final int NUM_CUSTOMERS = CUSTOMER_DATA.length;
     private static double currenTime;
     private static Queue<Integer> queue;
     private static boolean isBusy;
@@ -20,18 +31,9 @@ public class RedoMidAct02 {
         isBusy = false;
     }
     private static void statisticalAccumulators(int producedParts, int partsPassedQueue, double totalWaitingTime,
-                                                double maxWaitingTime, double totalTimeInSystem, double maxServiceTime,
+                                                double maxWaitingTime, double totalTimeInSystem, double maxTimeInSystem,
                                                 double areaUnderQueueLengthCurve, int maxQueue, double areaUnderSystemLengthCurve) {
 
-        System.out.println("Simulation completed.\n");
-        System.out.println("Number of parts processed: " + producedParts);
-        System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts));
-        System.out.println("Average number of parts in queue: " );
-        System.out.println("Longest time spent waiting in queue: " );
-        System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts));
-        System.out.println("Longest time spent in system: " );
-        System.out.println("Area under queue length curve: " + areaUnderQueueLengthCurve);
-        System.out.println("Area under system length curve: " + areaUnderSystemLengthCurve);
     }
 
     private static void attributes(double inQueue, double inService) {
@@ -77,18 +79,37 @@ public class RedoMidAct02 {
         int partsPassedQueue = 0;
         double totalWaitingTime = 0;
         double maxWaitingTime = 0;
-        double totalTimeInService = 0;
-        double maxServiceTime = 0;
+        double totalTimeInSystem = 0;
+        double maxTimeInSystem = 0;
         double areaUnderQueueLengthCurve = 0;
         int maxQueue = 0;
         double areaUnderSystemLengthCurve = 0;
 
+        init();
 
+        /*
         justFinishedEvent(entityNo, timeT, eventType);
         variables(entityInQueue, resource);
         attributes(inQueue, inService);
-        statisticalAccumulators(producedParts, partsPassedQueue, totalWaitingTime, maxWaitingTime, totalTimeInService,
-                maxServiceTime, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
+        statisticalAccumulators(producedParts, partsPassedQueue, totalWaitingTime, maxWaitingTime, totalTimeInSystem,
+                maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
+         */
 
+
+        System.out.printf("%-10d %-6s %-14d %-6d %-8d %-24d %-28d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d%n",
+                entityNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
+                totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderQueueLengthCurve);
+
+
+        System.out.println("Simulation completed.\n");
+        System.out.println("Simulation time: " + simulationTime + "\n");
+        System.out.println("Number of parts processed: " + producedParts);
+        System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts));
+        System.out.println("Average number of parts in queue: " );
+        System.out.println("Longest time spent waiting in queue: " );
+        System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts));
+        System.out.println("Longest time spent in system: " );
+        System.out.println("Area under queue length curve: " + areaUnderQueueLengthCurve);
+        System.out.println("Area under system length curve: " + areaUnderSystemLengthCurve);
     }
 }
