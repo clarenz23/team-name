@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -64,7 +61,7 @@ public class RedoMidAct02 {
         //just finished event
         int entityNo = 0;
         double timeT = 0;
-        String eventType = "";
+        String eventType = "Init";
 
         //variables
         int entityInQueue = 0;
@@ -87,6 +84,12 @@ public class RedoMidAct02 {
 
         init();
 
+        System.out.printf("%-10d %-6s %-14d %-6d %-8d %-24d %-28d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d%n",
+                entityNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
+                totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderQueueLengthCurve);
+
+        scheduleArrival(); // Schedule the first arrival
+
         /*
         justFinishedEvent(entityNo, timeT, eventType);
         variables(entityInQueue, resource);
@@ -94,12 +97,6 @@ public class RedoMidAct02 {
         statisticalAccumulators(producedParts, partsPassedQueue, totalWaitingTime, maxWaitingTime, totalTimeInSystem,
                 maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
          */
-
-
-        System.out.printf("%-10d %-6s %-14d %-6d %-8d %-24d %-28d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d%n",
-                entityNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
-                totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderQueueLengthCurve);
-
 
         System.out.println("Simulation completed.\n");
         System.out.println("Simulation time: " + simulationTime + "\n");
@@ -111,5 +108,18 @@ public class RedoMidAct02 {
         System.out.println("Longest time spent in system: " );
         System.out.println("Area under queue length curve: " + areaUnderQueueLengthCurve);
         System.out.println("Area under system length curve: " + areaUnderSystemLengthCurve);
+    }
+
+    private static void scheduleArrival() {
+        double interarrivalTime = CUSTOMER_DATA[0][2];
+        double arrivalTime = currenTime + interarrivalTime;
+        int customerNo = (int) CUSTOMER_DATA[0][0];
+        queue.add(customerNo);
+
+        //System.out.printf("%4d  %7.2f  %7.2f  %9s  %9.2f  %9s  %9s%n", customerNo, time, interarrivalTime, "-", arrivalTime, "-", "-");
+
+        CUSTOMER_DATA[0][1] = arrivalTime;
+        CUSTOMER_DATA[0][2] = CUSTOMER_DATA[customerNo][2];
+        CUSTOMER_DATA[0][3] = CUSTOMER_DATA[1][3];
     }
 }
