@@ -45,7 +45,7 @@ public class RedoMidAct02 {
             double serviceTime = CUSTOMER_DATA[customerNo][3];
             double departureTime = currentTime + serviceTime;
             double waitingTime = currentTime - CUSTOMER_DATA[customerNo][1];
-            System.out.printf("%4d  %7.2f  %7s  %9.2f  %9s  %9.2f  %9.2f%n",
+            System.out.printf("%-10d %-8.2f %-16s %-7.2f %-8.2f\n",
                     customerNo, currentTime, "-", CUSTOMER_DATA[customerNo][1], waitingTime, departureTime, serviceTime);
             isBusy = true;
             CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
