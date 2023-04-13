@@ -87,11 +87,11 @@ public class RedoMidAct02 {
         System.out.println("Simulation completed.\n");
         System.out.println("Simulation time: " + simulationTime + "\n");
         System.out.println("Number of parts processed: " + producedParts);
-        System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts));
+        System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / partsPassedQueue) + "mins/part");
         System.out.println("Average number of parts in queue: "); // formula tba
         System.out.println("Longest time spent waiting in queue: " + maxWaitingTime);
-        System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts));
-        System.out.println("Longest time spent in system: " + maxTimeInSystem);
+        System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts) + "mins/part");
+        System.out.println("Longest time spent in system: "  + maxTimeInSystem);
         System.out.println("Area under queue length curve: " + areaUnderQueueLengthCurve);
         System.out.println("Area under system length curve: " + areaUnderSystemLengthCurve);
     }
