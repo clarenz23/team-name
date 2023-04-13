@@ -3,7 +3,7 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public class RedoMidAct02 {
-    // Column 0: Customer ID, Column 1: Arrival Time, Column 2: Service Time
+    // Column 0: Customer ID, Column 1: Arrival Time, Column 2: Interarrival, Column 3: Service Time
     private static final double[][] CUSTOMER_DATA = {
             {1, 0.00, 1.73, 2.90},
             {2, 1.73, 1.35, 1.76},
@@ -18,14 +18,25 @@ public class RedoMidAct02 {
             {11, 40.82, Math.random(), Math.random()}
     };
     private static final int NUM_CUSTOMERS = CUSTOMER_DATA.length;
-    private static double currenTime;
+    private static double currentTime;
     private static Queue<Integer> queue;
     private static boolean isBusy;
 
     private static void init() {
-        currenTime = 0;
+        currentTime = 0;
         queue = new LinkedList<>();
         isBusy = false;
+    }
+
+    private static void scheduleArrival() {
+        double interarrivalTime = CUSTOMER_DATA[0][2];
+        double arrivalTime = currentTime + interarrivalTime;
+        int customerNo = (int) CUSTOMER_DATA[0][0];
+        queue.add(customerNo);
+
+        CUSTOMER_DATA[0][1] = arrivalTime;
+        CUSTOMER_DATA[0][2] = CUSTOMER_DATA[customerNo][2];
+        CUSTOMER_DATA[0][3] = CUSTOMER_DATA[1][3];
     }
 
     public static void main(String[] args) {
@@ -77,24 +88,11 @@ public class RedoMidAct02 {
         System.out.println("Simulation time: " + simulationTime + "\n");
         System.out.println("Number of parts processed: " + producedParts);
         System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts));
-        System.out.println("Average number of parts in queue: " );
-        System.out.println("Longest time spent waiting in queue: " );
+        System.out.println("Average number of parts in queue: "); // formula tba
+        System.out.println("Longest time spent waiting in queue: " + maxWaitingTime);
         System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts));
-        System.out.println("Longest time spent in system: " );
+        System.out.println("Longest time spent in system: " + maxTimeInSystem);
         System.out.println("Area under queue length curve: " + areaUnderQueueLengthCurve);
         System.out.println("Area under system length curve: " + areaUnderSystemLengthCurve);
-    }
-
-    private static void scheduleArrival() {
-        double interarrivalTime = CUSTOMER_DATA[0][2];
-        double arrivalTime = currenTime + interarrivalTime;
-        int customerNo = (int) CUSTOMER_DATA[0][0];
-        queue.add(customerNo);
-
-        //System.out.printf("%4d  %7.2f  %7.2f  %9s  %9.2f  %9s  %9s%n", customerNo, time, interarrivalTime, "-", arrivalTime, "-", "-");
-
-        CUSTOMER_DATA[0][1] = arrivalTime;
-        CUSTOMER_DATA[0][2] = CUSTOMER_DATA[customerNo][2];
-        CUSTOMER_DATA[0][3] = CUSTOMER_DATA[1][3];
     }
 }
