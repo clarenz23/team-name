@@ -27,23 +27,6 @@ public class RedoMidAct02 {
         queue = new LinkedList<>();
         isBusy = false;
     }
-    private static void statisticalAccumulators(int producedParts, int partsPassedQueue, double totalWaitingTime,
-                                                double maxWaitingTime, double totalTimeInSystem, double maxTimeInSystem,
-                                                double areaUnderQueueLengthCurve, int maxQueue, double areaUnderSystemLengthCurve) {
-
-    }
-
-    private static void attributes(double inQueue, double inService) {
-
-    }
-
-    private static void variables(int entityInQueue, int resource) {
-
-    }
-
-    private static void justFinishedEvent(int entityNo, double timeT, String eventType) {
-
-    }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -89,14 +72,6 @@ public class RedoMidAct02 {
                 totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
         scheduleArrival(); // Schedule the first arrival
-
-        /*
-        justFinishedEvent(entityNo, timeT, eventType);
-        variables(entityInQueue, resource);
-        attributes(inQueue, inService);
-        statisticalAccumulators(producedParts, partsPassedQueue, totalWaitingTime, maxWaitingTime, totalTimeInSystem,
-                maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
-         */
 
         System.out.println("Simulation completed.\n");
         System.out.println("Simulation time: " + simulationTime + "\n");
