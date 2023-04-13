@@ -44,17 +44,21 @@ public class TeamJMCGMidAct02 {
     }
 
     private static void processPart() {
-        int customerNo = queue.remove();
-        double serviceTime = CUSTOMER_DATA[customerNo][3];
-        double departureTime = time + serviceTime;
-        double waitingTime = time - CUSTOMER_DATA[customerNo][1];
-        System.out.printf("%4d  %7.2f  %7s  %9.2f  %9s  %9.2f  %9.2f%n",
-                customerNo, time, "-", CUSTOMER_DATA[customerNo][1], waitingTime, departureTime, serviceTime);
-        isBusy = true;
-        CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
-        //CUSTOMER_DATA[customerNo][3] = Double.POSITIVE_INFINITY;
-
+        if (!queue.isEmpty()) {
+            int customerNo = queue.remove();
+            double serviceTime = CUSTOMER_DATA[customerNo][3];
+            double departureTime = time + serviceTime;
+            double waitingTime = time - CUSTOMER_DATA[customerNo][1];
+            System.out.printf("%4d  %7.2f  %7s  %9.2f  %9s  %9.2f  %9.2f%n",
+                    customerNo, time, "-", CUSTOMER_DATA[customerNo][1], waitingTime, departureTime, serviceTime);
+            isBusy = true;
+            CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
+        }
+        else {
+            isBusy = false;
+        }
     }
+
 
 
     // Print the statistical accumulators

@@ -55,8 +55,8 @@ public class RedoMidAct02 {
 
         // Start of Simulation
         System.out.println("Just Finished Event ------------- Variables ---------------------- Attributes -------------------------------- Statistical Accumulators --------------");
-        System.out.printf("%-10s %-6s %-14s %-6s %-8s %-24s %-28s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s%n",
-                "Entity No", "Time t", "Event Type", "Q(t)", "B(t)", "Arrival Time in Queue", "Arrival Time in Service", "P", "N", "ΣW", "Q", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
+        System.out.printf("%-10s %-6s %-14s %-6s %-8s %-24s %-28s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s %-4s%n",
+                "Entity No", "Time t", "Event Type", "Q(t)", "B(t)", "Arrival Time in Queue", "Arrival Time in Service", "P", "N", "ΣWQ", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
 
         //just finished event
         int entityNo = 0;
@@ -84,9 +84,9 @@ public class RedoMidAct02 {
 
         init();
 
-        System.out.printf("%-10d %-6s %-14d %-6d %-8d %-24d %-28d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d %-4d%n",
+        System.out.printf("%-10d %-6.2f %-14s %-6d %-8d %-24.2f %-28.2f %-4d %-4d %-4.2f %-4.2f %-4.2f %-4.2f %-4.2f %-4.2f %-4.2f%n",
                 entityNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
-                totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderQueueLengthCurve);
+                totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
         scheduleArrival(); // Schedule the first arrival
 
