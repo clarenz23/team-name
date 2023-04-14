@@ -56,8 +56,8 @@ public class RedoMidAct02 {
                                       int maxQueue, double areaUnderSystemLengthCurve) {
         if (!queue.isEmpty() && !isBusy) {
             int customerNo = queue.remove();
-            double arrivalTime = CUSTOMER_DATA[customerNo - 1][1];
-            double serviceTime = CUSTOMER_DATA[customerNo - 1][3];
+            double arrivalTime = CUSTOMER_DATA[customerNo][1];
+            double serviceTime = CUSTOMER_DATA[customerNo][3];
             double departureTime = currentTime + serviceTime;
             double waitingTime = currentTime - arrivalTime;
 
@@ -65,6 +65,12 @@ public class RedoMidAct02 {
             if (departureTime <= CUSTOMER_DATA[customerNo][1]) {
                 timeT = departureTime;
                 eventType = "Dep";
+                producedParts++;
+                totalWaitingTime += waitingTime;
+                maxWaitingTime = Math.max(maxWaitingTime, waitingTime);
+                totalTimeInSystem += serviceTime + waitingTime;
+                maxTimeInSystem = Math.max(maxTimeInSystem, serviceTime + waitingTime);
+
             } else if (departureTime > CUSTOMER_DATA[customerNo][1]) {
                 timeT = CUSTOMER_DATA[customerNo][1];
                 eventType = "Arr";
@@ -80,12 +86,8 @@ public class RedoMidAct02 {
                 inQueue = currentTime;
             }
 
-            producedParts++;
+            //producedParts++;
             partsPassedQueue++;
-            totalWaitingTime += waitingTime;
-            maxWaitingTime = Math.max(maxWaitingTime, waitingTime);
-            totalTimeInSystem += serviceTime + waitingTime;
-            maxTimeInSystem = Math.max(maxTimeInSystem, serviceTime + waitingTime);
             double timeOfLastEvent = 0;
             areaUnderQueueLengthCurve += entityInQueue * (currentTime - timeOfLastEvent);
             maxQueue = Math.max(maxQueue, entityInQueue);
@@ -184,6 +186,7 @@ public class RedoMidAct02 {
             producedParts(timeT, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
                     totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
+            /*
             if (currentTime >= CUSTOMER_DATA[queue.peek()][1] && !isBusy) {
                 //producedParts(timeT);
                 double waitingTime = currentTime - CUSTOMER_DATA[queue.peek()][1];
@@ -195,6 +198,8 @@ public class RedoMidAct02 {
                 isBusy = true;
                 queue.remove();
             }
+
+             */
 
             entityInQueue += queue.size();
         }
