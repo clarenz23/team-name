@@ -25,12 +25,6 @@ public class TeamJMCGMidAct02 {
     private static Queue<Integer> queue;
     private static boolean isBusy;
 
-    private static void init() {
-        time = 0;
-        queue = new LinkedList<>();
-        isBusy = false;
-    }
-
     private static void scheduleArrival() {
         double interarrivalTime = CUSTOMER_DATA[0][2];
         double arrivalTime = time + interarrivalTime;
@@ -59,7 +53,11 @@ public class TeamJMCGMidAct02 {
         }
     }
 
-
+    private static void init() {
+        time = 0;
+        queue = new LinkedList<>();
+        isBusy = false;
+    }
 
     // Print the statistical accumulators
     private static void printStats(int numParts, double totalWaitTime, int numPartsInQueue,
@@ -79,8 +77,21 @@ public class TeamJMCGMidAct02 {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter the simulation time (minutes): ");
-        double simTime = sc.nextDouble();
+        double simTime = 0;
+
+        while (true) {
+            System.out.print("Enter the simulation time (minutes): ");
+            try {
+                simTime = sc.nextDouble();
+                if (simTime <= 0) {
+                    throw new Exception("Simulation time must be greater than 0.");
+                }
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid input: " + e.getMessage());
+                sc.nextLine(); // clear the scanner buffer
+            }
+        }
 
 
         init(); // Initialize the simulation

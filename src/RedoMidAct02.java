@@ -21,6 +21,7 @@ public class RedoMidAct02 {
     private static double currentTime;
     private static Queue<Integer> queue;
     private static boolean isBusy;
+    private static int currentCustomerIndex = 0;
 
     private static void init() {
         currentTime = 0;
@@ -29,39 +30,52 @@ public class RedoMidAct02 {
     }
 
     private static void scheduleArrival() {
-        double interarrivalTime = CUSTOMER_DATA[0][2];
+        double interarrivalTime = CUSTOMER_DATA[currentCustomerIndex][2];
         double arrivalTime = currentTime + interarrivalTime;
-        int customerNo = (int) CUSTOMER_DATA[0][0];
+        int customerNo = (int) CUSTOMER_DATA[currentCustomerIndex][0];
         queue.add(customerNo);
 
-        CUSTOMER_DATA[0][1] = arrivalTime;
-        CUSTOMER_DATA[0][2] = CUSTOMER_DATA[customerNo][2];
-        CUSTOMER_DATA[0][3] = CUSTOMER_DATA[1][3];
+        CUSTOMER_DATA[currentCustomerIndex][1] = arrivalTime;
+
+        if (currentCustomerIndex < NUM_CUSTOMERS - 1) {
+            currentCustomerIndex++;
+            CUSTOMER_DATA[currentCustomerIndex][2] = CUSTOMER_DATA[currentCustomerIndex - 1][2];
+            CUSTOMER_DATA[currentCustomerIndex][3] = CUSTOMER_DATA[currentCustomerIndex - 1][3];
+        }
     }
 
+
     private static void producedParts() {
-        if (!queue.isEmpty()) {
+        if (!queue.isEmpty() && !isBusy) {
             int customerNo = queue.remove();
             double serviceTime = CUSTOMER_DATA[customerNo][3];
             double departureTime = currentTime + serviceTime;
-            double waitingTime = currentTime - CUSTOMER_DATA[customerNo][1];
-            System.out.printf("%-10d %-8.2f %-16s %-7.2f %-8.2f\n",
-                    customerNo, currentTime, "-", CUSTOMER_DATA[customerNo][1], waitingTime, departureTime, serviceTime);
+            double waitingTime = currentTime - CUSTOMER_DATA[customerNo - 1][3];
+            System.out.printf("%-10d %-8.2f %-16s %-7.2f %-8.2f %-8.2f %-8.2f%n",
+                    customerNo, currentTime, "-", CUSTOMER_DATA[customerNo - 1][3], waitingTime, departureTime, serviceTime);
             isBusy = true;
             CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
-        }
-        else {
-            isBusy = false;
+            currentTime = departureTime; // update the current time
         }
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        double simulationTime = 0;
 
-        // Get simulation time from user
-        System.out.print("Enter the simulation time (in minutes): ");
-        double simulationTime = sc.nextDouble();
-        sc.close();
+        while (true) {
+            System.out.print("Enter the simulation time (minutes): ");
+            try {
+                simulationTime = sc.nextDouble();
+                if (simulationTime <= 0) {
+                    throw new Exception("Simulation time must be greater than 0.");
+                }
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid input: " + e.getMessage());
+                sc.nextLine(); // clear the scanner buffer
+            }
+        }
 
         // Start of Simulation
         System.out.println("-----Just Finished Event ------------- Variables ---------------------- Attributes ------------------------------------- Statistical Accumulators ------------------");
@@ -149,10 +163,10 @@ public class RedoMidAct02 {
         System.out.println("Simulation completed.\n");
         System.out.println("Simulation time: " + simulationTime + "\n");
         System.out.println("Number of parts processed: " + producedParts);
-        System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / partsPassedQueue) + "mins/part");
-        System.out.println("Average number of parts in queue: "); // formula tba
+        System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts) + " mins/part");
+        System.out.println("Average number of parts in queue: " + (areaUnderQueueLengthCurve)/ currentTime); // formula tba
         System.out.println("Longest time spent waiting in queue: " + maxWaitingTime);
-        System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts) + "mins/part");
+        System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts) + " mins/part");
         System.out.println("Longest time spent in system: "  + maxTimeInSystem);
         System.out.println("Area under queue length curve: " + areaUnderQueueLengthCurve);
         System.out.println("Area under system length curve: " + areaUnderSystemLengthCurve);
