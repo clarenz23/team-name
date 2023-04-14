@@ -22,6 +22,7 @@ public class RedoMidAct02 {
     private static Queue<Integer> queue;
     private static boolean isBusy;
     private static int currentCustomerIndex = 0;
+    private static String eventType;
 
     private static void init() {
         currentTime = 0;
@@ -41,6 +42,10 @@ public class RedoMidAct02 {
             currentCustomerIndex++;
             CUSTOMER_DATA[currentCustomerIndex][2] = CUSTOMER_DATA[currentCustomerIndex - 1][2];
             CUSTOMER_DATA[currentCustomerIndex][3] = CUSTOMER_DATA[currentCustomerIndex - 1][3];
+        } else {
+            currentCustomerIndex++;
+            CUSTOMER_DATA[currentCustomerIndex][2] = Math.random();
+            CUSTOMER_DATA[currentCustomerIndex][3] = Math.random();
         }
     }
 
@@ -127,10 +132,6 @@ public class RedoMidAct02 {
                 break;
             }
 
-            if (producedParts == NUM_CUSTOMERS) {
-                break;
-            }
-
             if (nextEventTime > simulationTime) {
                 nextEventTime = simulationTime;
             }
@@ -157,8 +158,8 @@ public class RedoMidAct02 {
             }
 
             entityInQueue += queue.size();
-            sc.close();
         }
+        sc.close();
 
         System.out.println("Simulation completed.\n");
         System.out.println("Simulation time: " + simulationTime + "\n");

@@ -20,9 +20,6 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
     private JLabel avgWaitingTimeLabel, probCustomerWaitsLabel, propIdleTimeLabel,
             avgServiceTimeLabel, avgInterarrivalTimeLabel, avgQueueWaitTimeLabel, avgCustomerSpendsLabel, simulationTerminationLabel;
 
-    /**
-     * 
-     */
     public SingleChannelQueueingSystemGUI() {
         // Set up the GUI
         setTitle("Single Channel Queueing System Simulation");
