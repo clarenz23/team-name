@@ -50,14 +50,27 @@ public class RedoMidAct02 {
     }
 
 
-    private static void producedParts() {
+    private static void producedParts(double timeT) {
         if (!queue.isEmpty() && !isBusy) {
             int customerNo = queue.remove();
             double serviceTime = CUSTOMER_DATA[customerNo][3];
             double departureTime = currentTime + serviceTime;
             double waitingTime = currentTime - CUSTOMER_DATA[customerNo - 1][3];
+
+            // setting time t and event type
+            if (departureTime <= CUSTOMER_DATA[customerNo - 1][1]) {
+                timeT = CUSTOMER_DATA[customerNo + 1][1]; // possible index out of bounds
+                eventType = "End";
+            } else if (departureTime > CUSTOMER_DATA[customerNo + 1][1]) {
+                timeT = CUSTOMER_DATA[customerNo + 1][1]; // possible index out of bounds
+                eventType = "Arr";
+            } else {
+                timeT = departureTime;
+                eventType = "Dep";
+            }
+
             System.out.printf("%-10d %-8.2f %-16s %-7.2f %-8.2f %-8.2f %-8.2f%n",
-                    customerNo, currentTime, "-", CUSTOMER_DATA[customerNo - 1][3], waitingTime, departureTime, serviceTime);
+                    customerNo, timeT, eventType, CUSTOMER_DATA[customerNo - 1][3], waitingTime, departureTime, serviceTime);
             isBusy = true;
             CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
             currentTime = departureTime; // update the current time
@@ -145,8 +158,11 @@ public class RedoMidAct02 {
                 scheduleArrival();
             }
 
+            producedParts(timeT);
+
+            /*
             if (currentTime >= CUSTOMER_DATA[queue.peek()][1] && !isBusy) {
-                producedParts();
+                producedParts(timeT);
                 producedParts++;
                 double waitingTime = currentTime - CUSTOMER_DATA[queue.peek()][1];
                 totalWaitingTime += waitingTime;
@@ -156,6 +172,7 @@ public class RedoMidAct02 {
                 maxTimeInSystem = Math.max(maxTimeInSystem, timeInSystem);
                 isBusy = false;
             }
+             */
 
             entityInQueue += queue.size();
         }
@@ -165,7 +182,7 @@ public class RedoMidAct02 {
         System.out.println("Simulation time: " + simulationTime + "\n");
         System.out.println("Number of parts processed: " + producedParts);
         System.out.println("Average time spent waiting in queue: " + (totalWaitingTime / producedParts) + " mins/part");
-        System.out.println("Average number of parts in queue: " + (areaUnderQueueLengthCurve)/ currentTime); // formula tba
+        System.out.println("Average number of parts in queue: " + (areaUnderQueueLengthCurve)/ currentTime);
         System.out.println("Longest time spent waiting in queue: " + maxWaitingTime);
         System.out.println("Average time spent in system: " + (totalTimeInSystem / producedParts) + " mins/part");
         System.out.println("Longest time spent in system: "  + maxTimeInSystem);
