@@ -132,8 +132,8 @@ public class RedoMidAct02 {
 
         scheduleArrival(); // Schedule the first arrival
 
-        while (currentTime < simulationTime) {
-            double nextEventTime;
+        while (currentTime < simulationTime && (isBusy || !queue.isEmpty())) {
+            double nextEventTime = 0;
 
             if (isBusy && !queue.isEmpty()) {
                 nextEventTime = currentTime + CUSTOMER_DATA[queue.peek()][3];
@@ -141,8 +141,6 @@ public class RedoMidAct02 {
                 nextEventTime = Double.POSITIVE_INFINITY;
             } else if (!queue.isEmpty()) {
                 nextEventTime = currentTime + CUSTOMER_DATA[queue.peek()][2];
-            } else {
-                break;
             }
 
             if (nextEventTime > simulationTime) {
@@ -160,22 +158,20 @@ public class RedoMidAct02 {
 
             producedParts(timeT);
 
-            /*
             if (currentTime >= CUSTOMER_DATA[queue.peek()][1] && !isBusy) {
-                producedParts(timeT);
-                producedParts++;
                 double waitingTime = currentTime - CUSTOMER_DATA[queue.peek()][1];
                 totalWaitingTime += waitingTime;
                 maxWaitingTime = Math.max(maxWaitingTime, waitingTime);
                 double timeInSystem = currentTime - CUSTOMER_DATA[queue.peek()][1] + CUSTOMER_DATA[queue.peek()][3];
                 totalTimeInSystem += timeInSystem;
                 maxTimeInSystem = Math.max(maxTimeInSystem, timeInSystem);
-                isBusy = false;
+                isBusy = true;
+                queue.remove();
             }
-             */
 
             entityInQueue += queue.size();
         }
+
         sc.close();
 
         System.out.println("Simulation completed.\n");
