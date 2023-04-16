@@ -30,18 +30,22 @@ public class RedoMidAct02 {
         isBusy = false;
     }
 
-    private static void scheduleArrival() {
-        double interarrivalTime = CUSTOMER_DATA[currentCustomerIndex][2];
-        double arrivalTime = currentTime + interarrivalTime;
+    private static void scheduleArrival(double timeT) {
+        double arrivalTime = CUSTOMER_DATA[currentCustomerIndex][1];
+        //double serviceTime = CUSTOMER_DATA[currentCustomerIndex][3];
         int customerNo = (int) CUSTOMER_DATA[currentCustomerIndex][0];
         queue.add(customerNo);
 
-        CUSTOMER_DATA[currentCustomerIndex][1] = arrivalTime;
+        //CUSTOMER_DATA[currentCustomerIndex][0] = arrivalTime;
+
+        if (customerNo == 1) {
+            timeT = arrivalTime;
+        }
 
         if (currentCustomerIndex < NUM_CUSTOMERS - 1) {
             currentCustomerIndex++;
-            CUSTOMER_DATA[currentCustomerIndex][2] = CUSTOMER_DATA[currentCustomerIndex - 1][2];
-            CUSTOMER_DATA[currentCustomerIndex][3] = CUSTOMER_DATA[currentCustomerIndex - 1][3];
+            CUSTOMER_DATA[currentCustomerIndex][2] = CUSTOMER_DATA[currentCustomerIndex][2];
+            CUSTOMER_DATA[currentCustomerIndex][3] = CUSTOMER_DATA[currentCustomerIndex][3];
         } else {
             currentCustomerIndex++;
             CUSTOMER_DATA[currentCustomerIndex][2] = Math.random();
@@ -100,7 +104,7 @@ public class RedoMidAct02 {
                         entityNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
                         totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
-                scheduleArrival(); // Schedule the first arrival
+                scheduleArrival(timeT); // Schedule the first arrival
 
                 while (currentTime < simulationTime && (isBusy || !queue.isEmpty())) {
 
@@ -124,7 +128,7 @@ public class RedoMidAct02 {
                     currentTime = nextEventTime;
 
                     if (currentTime >= CUSTOMER_DATA[0][1] && producedParts < NUM_CUSTOMERS) {
-                        scheduleArrival();
+                        scheduleArrival(timeT);
                     }
 
                     int customerNo = queue.remove();
