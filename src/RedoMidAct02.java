@@ -30,17 +30,11 @@ public class RedoMidAct02 {
         isBusy = false;
     }
 
-    private static void scheduleArrival(double timeT) {
+    private static void scheduleArrival(double simulationTime, double timeT) {
         double arrivalTime = CUSTOMER_DATA[currentCustomerIndex][1];
         //double serviceTime = CUSTOMER_DATA[currentCustomerIndex][3];
         int customerNo = (int) CUSTOMER_DATA[currentCustomerIndex][0];
         queue.add(customerNo);
-
-        //CUSTOMER_DATA[currentCustomerIndex][0] = arrivalTime;
-
-        if (customerNo == 1) {
-            timeT = arrivalTime;
-        }
 
         if (currentCustomerIndex < NUM_CUSTOMERS - 1) {
             currentCustomerIndex++;
@@ -104,10 +98,16 @@ public class RedoMidAct02 {
                         entityNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
                         totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
-                scheduleArrival(timeT); // Schedule the first arrival
+                //scheduleArrival(simulationTime, timeT); // Schedule the first arrival
+
+                entityNo = (int) CUSTOMER_DATA[currentCustomerIndex][0];
+                queue.add(entityNo);
+
+                double arrivalTime = CUSTOMER_DATA[currentCustomerIndex][1];
+                double serviceTime = CUSTOMER_DATA[entityNo][3];
+                double departureTime = arrivalTime + serviceTime;
 
                 while (currentTime < simulationTime && (isBusy || !queue.isEmpty())) {
-
                     double nextEventTime = 0;
 
                     if (isBusy && !queue.isEmpty()) {
@@ -128,17 +128,14 @@ public class RedoMidAct02 {
                     currentTime = nextEventTime;
 
                     if (currentTime >= CUSTOMER_DATA[0][1] && producedParts < NUM_CUSTOMERS) {
-                        scheduleArrival(timeT);
+                        scheduleArrival(simulationTime, timeT);
                     }
 
-                    int customerNo = queue.remove();
-                    double arrivalTime = CUSTOMER_DATA[customerNo][1];
-                    double serviceTime = CUSTOMER_DATA[customerNo][3];
-                    double departureTime = currentTime + serviceTime;
+                    entityNo = queue.remove();
                     double waitingTime = currentTime - arrivalTime;
 
                     // setting time t and event type
-                    if (departureTime <= CUSTOMER_DATA[customerNo][1]) {
+                    if (departureTime <= CUSTOMER_DATA[entityNo][1]) {
                         timeT = departureTime;
                         eventType = "Dep";
                         producedParts++;
@@ -147,8 +144,8 @@ public class RedoMidAct02 {
                         totalTimeInSystem += serviceTime + waitingTime;
                         maxTimeInSystem = Math.max(maxTimeInSystem, serviceTime + waitingTime);
 
-                    } else if (departureTime > CUSTOMER_DATA[customerNo][1]) {
-                        timeT = CUSTOMER_DATA[customerNo][1];
+                    } else if (departureTime > CUSTOMER_DATA[entityNo][1]) {
+                        timeT = CUSTOMER_DATA[entityNo][1];
                         eventType = "Arr";
                     }
 
@@ -170,11 +167,11 @@ public class RedoMidAct02 {
                     areaUnderSystemLengthCurve += (entityInQueue + 1) * (currentTime - timeOfLastEvent);
 
                     System.out.printf("%-10d %-8.2f %-16s %-7d %-8d %-24.2f %-28.2f %-4d %-4d %-6.2f %-6.2f %-6.2f %-6.2f %-6.2f %-5d %-5.2f%n",
-                            customerNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
+                            entityNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
                             totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
 
                     isBusy = true;
-                    CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
+                    CUSTOMER_DATA[entityNo][2] = CUSTOMER_DATA[entityNo][3];
                     currentTime = departureTime; // update the current time
 
                     entityInQueue += queue.size();
