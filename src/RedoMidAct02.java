@@ -49,60 +49,6 @@ public class RedoMidAct02 {
         }
     }
 
-
-    private static void producedParts(double timeT, int entityInQueue, int resource, double inQueue, double inService,
-                                      int producedParts, int partsPassedQueue, double totalWaitingTime, double maxWaitingTime,
-                                      double totalTimeInSystem, double maxTimeInSystem, double areaUnderQueueLengthCurve,
-                                      int maxQueue, double areaUnderSystemLengthCurve) {
-        if (!queue.isEmpty() && !isBusy) {
-            int customerNo = queue.remove();
-            double arrivalTime = CUSTOMER_DATA[customerNo][1];
-            double serviceTime = CUSTOMER_DATA[customerNo][3];
-            double departureTime = currentTime + serviceTime;
-            double waitingTime = currentTime - arrivalTime;
-
-            // setting time t and event type
-            if (departureTime <= CUSTOMER_DATA[customerNo][1]) {
-                timeT = departureTime;
-                eventType = "Dep";
-                producedParts++;
-                totalWaitingTime += waitingTime;
-                maxWaitingTime = Math.max(maxWaitingTime, waitingTime);
-                totalTimeInSystem += serviceTime + waitingTime;
-                maxTimeInSystem = Math.max(maxTimeInSystem, serviceTime + waitingTime);
-
-            } else if (departureTime > CUSTOMER_DATA[customerNo][1]) {
-                timeT = CUSTOMER_DATA[customerNo][1];
-                eventType = "Arr";
-            }
-
-            // update number in queue, resource status
-            if (queue.isEmpty()) {
-                entityInQueue = 0;
-                resource = 0;
-            } else {
-                entityInQueue = queue.size();
-                resource = 1;
-                inQueue = currentTime;
-            }
-
-            //producedParts++;
-            partsPassedQueue++;
-            double timeOfLastEvent = 0;
-            areaUnderQueueLengthCurve += entityInQueue * (currentTime - timeOfLastEvent);
-            maxQueue = Math.max(maxQueue, entityInQueue);
-            areaUnderSystemLengthCurve += (entityInQueue + 1) * (currentTime - timeOfLastEvent);
-
-            System.out.printf("%-10d %-8.2f %-16s %-7d %-8d %-24.2f %-28.2f %-4d %-4d %-6.2f %-6.2f %-6.2f %-6.2f %-6.2f %-5d %-5.2f%n",
-                    customerNo, timeT, eventType, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
-                    totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
-
-            isBusy = true;
-            CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
-            currentTime = departureTime; // update the current time
-        }
-    }
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         double simulationTime = 0;
@@ -228,25 +174,6 @@ public class RedoMidAct02 {
             isBusy = true;
             CUSTOMER_DATA[customerNo][2] = CUSTOMER_DATA[customerNo][3];
             currentTime = departureTime; // update the current time
-
-            /*
-            producedParts(timeT, entityInQueue, resource, inQueue, inService, producedParts, partsPassedQueue,
-                    totalWaitingTime, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve);
-
-
-            if (currentTime >= CUSTOMER_DATA[queue.peek()][1] && !isBusy) {
-                //producedParts(timeT);
-                double waitingTime = currentTime - CUSTOMER_DATA[queue.peek()][1];
-                totalWaitingTime += waitingTime;
-                maxWaitingTime = Math.max(maxWaitingTime, waitingTime);
-                double timeInSystem = currentTime - CUSTOMER_DATA[queue.peek()][1] + CUSTOMER_DATA[queue.peek()][3];
-                totalTimeInSystem += timeInSystem;
-                maxTimeInSystem = Math.max(maxTimeInSystem, timeInSystem);
-                isBusy = true;
-                queue.remove();
-            }
-
-             */
 
             entityInQueue += queue.size();
         }
