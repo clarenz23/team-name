@@ -51,17 +51,23 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
-                    // Display an error message if the input is not a valid digit
-                    JOptionPane.showMessageDialog(inputPanel, "Invalid input. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
                     // Consume the key event to prevent the invalid character from being entered
                     e.consume();
                 }
-//                } else if (c == '0') {
-//                    // Display an error message if the input is zero
-//                    JOptionPane.showMessageDialog(inputPanel, "Invalid input. Zero is not allowed.", "Error", JOptionPane.ERROR_MESSAGE);
-//                    // Consume the key event to prevent the invalid character from being entered
-//                    e.consume();
-//                }
+            }
+
+            public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_ENTER) {
+                    char c = valueField.getText().charAt(0);
+                    if (!(Character.isDigit(c))) {
+                        // Display an error message if the input is not a valid digit
+                        JOptionPane.showMessageDialog(inputPanel, "Invalid input. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        // Call the actionPerformed method of the startButton when the Enter key is pressed
+                        startButton.doClick();
+                    }
+                }
             }
         });
 
@@ -101,7 +107,7 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
         // Create the Performance metrics panel
         JPanel statPanel = new JPanel();
         statPanel.setBorder(BorderFactory.createTitledBorder("Performance Metrics"));
-        statPanel.setPreferredSize(new Dimension(300,280));
+        statPanel.setPreferredSize(new Dimension(350,280));
         statPanel.setLayout(new GridLayout(0,1));
 
 
@@ -297,11 +303,11 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
 
         avgWaitingTimeLabel.setText("Average Waiting Time: " + formatAvgWaitingTime);
         probCustomerWaitsLabel.setText("Probability that a Customer Waits: " + formatProbCustomerWaits);
-        propIdleTimeLabel.setText("Probability of Idle Time: " + formatPropIdleTime);
+        propIdleTimeLabel.setText("Proportion of Idle Time of the Server: " + formatPropIdleTime);
         avgServiceTimeLabel.setText("Average Service Time: " + formatAvgServiceTime);
         avgInterarrivalTimeLabel.setText("Average Interarrival Time: " + formatAvgInterarrivalTime);
-        avgQueueWaitTimeLabel.setText("Average Queue Waiting Time: " + formatAvgQueueWaitTime);
-        avgCustomerSpendsLabel.setText("Average Customer Spends: " + formatAvgCustomerSpends);
+        avgQueueWaitTimeLabel.setText("Average Wait Time for Customers who wait: " + formatAvgQueueWaitTime);
+        avgCustomerSpendsLabel.setText("Average Customer Spends in the System: " + formatAvgCustomerSpends);
 
     }
 }
