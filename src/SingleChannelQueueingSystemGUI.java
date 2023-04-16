@@ -55,12 +55,13 @@ public class SingleChannelQueueingSystemGUI extends JFrame implements ActionList
                     JOptionPane.showMessageDialog(inputPanel, "Invalid input. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
                     // Consume the key event to prevent the invalid character from being entered
                     e.consume();
-                } else if (c == '0') {
-                    // Display an error message if the input is zero
-                    JOptionPane.showMessageDialog(inputPanel, "Invalid input. Zero is not allowed.", "Error", JOptionPane.ERROR_MESSAGE);
-                    // Consume the key event to prevent the invalid character from being entered
-                    e.consume();
                 }
+//                } else if (c == '0') {
+//                    // Display an error message if the input is zero
+//                    JOptionPane.showMessageDialog(inputPanel, "Invalid input. Zero is not allowed.", "Error", JOptionPane.ERROR_MESSAGE);
+//                    // Consume the key event to prevent the invalid character from being entered
+//                    e.consume();
+//                }
             }
         });
 
