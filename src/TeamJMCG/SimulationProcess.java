@@ -115,7 +115,7 @@ public class SimulationProcess {
         }
     }
 
-    // Print a single row of the simulation to the console, with specific formatting for each variable.
+    // This method prints a single row of the simulation to the console, with specific formatting for each variable.
     private void printRow() {
         // adjust spaces between variables as needed
         System.out.printf("%-12s %-9s %-15s %-8s %-14s %-24s %-20s %-4s %-4s %-6s %-6s %-6s %-6s %-6s %-5s %-5s%n",
@@ -127,7 +127,7 @@ public class SimulationProcess {
                 nextPart.get(nextPart.size() - 1)[15]);
     }
 
-    // Prints the performance metrics of the simulation
+    // This method prints the performance metrics of the simulation
     private void printPerformanceMetric(double simulationTime, int producedParts, double totalWaitingTime, double areaUnderQueueLengthCurve, double maxWaitingTime, double totalTimeInSystem, double maxTimeInSystem, double areaUnderSystemLengthCurve) {
         DecimalFormat df = new DecimalFormat("#.##");
         System.out.println("Simulation completed.");
@@ -144,21 +144,21 @@ public class SimulationProcess {
     }
 
     /**
-     * Retrieves a value in a row as a double.
+     * This method retrieves a value in a specific row and column of a list of objects and returns it as a double
      */
     private double getRowValue(int row, int column) {
         return (double) nextPart.get(row)[column];
     }
 
     /**
-     * Retrieves a value in a row as an int.
+     * This method retrieves an integer value from a specified column in a row of the simulation output
      */
     private int getRowValueInt(int row, int column) {
         return (int) nextPart.get(row)[column];
     }
 
     /**
-     * Calculate and return time in system values (ΣTS & TS*).
+     * This method calculate the time in system and return values (ΣTS & TS*)
      */
     private double[] getTS(int id, double currentTime) {
         double[] out = new double[2];
@@ -177,7 +177,7 @@ public class SimulationProcess {
     }
 
     /**
-     * Calculate and return waiting time values (ΣWQ & WQ*).
+     * This method calculate waiting time and return values (ΣWQ & WQ*)
      */
     private double[] getWQ(int id, double currentTime) {
         double[] out = new double[2];
@@ -196,21 +196,21 @@ public class SimulationProcess {
     }
 
     /**
-     * Calculate area under the queue length curve (∫Q)
+     * This method calculate area under the queue length curve (∫Q)
      */
     private double getAreaQ(double currentTime) {
         return roundOff((currentTime - getRowValue(nextPart.size()-1,1)) * (getRowValueInt(nextPart.size()-1,3)) + getRowValue(nextPart.size()-1,13));
     }
 
     /**
-     * Calculate area under the system length curve (∫B).
+     * This method calculate area under the system length curve (∫B).
      */
     private double getAreaB(double currentTime) {
         return roundOff((currentTime - getRowValue(nextPart.size() - 1 , 1)) * (getRowValueInt(nextPart.size() -1, 4))) + getRowValue(nextPart.size() - 1 , 15);
     }
 
     /**
-     * Calculate maximum queue (Q*)
+     * This method calculate maximum queue (Q*)
      */
     private int getMaxQueue(int currentQueueSize) {
         int max = 0;
@@ -233,7 +233,7 @@ public class SimulationProcess {
     }
 
     /**
-     * Returns true if any part has arrived according to the current time
+     * This method checks if any part has arrived at the current simulation time
      */
     private boolean checkArrival(double time) {
         for (Part part : partsData) {
@@ -245,7 +245,7 @@ public class SimulationProcess {
     }
 
     /**
-     * Return true if any part has departed according to the current time
+     * This method returns true if any part has departed from the system at the current time
      */
     private boolean checkDeparture(double time) {
         for (Part part : partsData) {
@@ -257,7 +257,8 @@ public class SimulationProcess {
     }
 
     /**
-     * Return the part that has arrived according to the current time
+     * This method return the Part object that has arrived according to the current simulation time
+     * If no part has arrived, return an empty Part object
      */
     private Part getArrivedPart(double time) {
         for (Part part : partsData) {
@@ -269,7 +270,8 @@ public class SimulationProcess {
     }
 
     /**
-     * Return the part that has departed according to the current time
+     * This method returns the part that has departed according to the current time,
+     * or a new empty part if none has departed
      */
     private Part getDepartedPart(double time) {
         for (Part part : partsData) {
@@ -281,7 +283,7 @@ public class SimulationProcess {
     }
 
     /**
-     * Round off a double to two digits.
+     * This method round off a double to two digits
      */
     private double roundOff(double value) {
         DecimalFormat df = new DecimalFormat("#.##");
