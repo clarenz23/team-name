@@ -1,5 +1,6 @@
 package TeamJMCG;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /***
@@ -25,19 +26,25 @@ public class Main {
 
         // Initialize variables for the simulation time and whether the user wants to continue running the simulation
         double simulationTime = 0;
-        char continueSim;
+        char continueSim = 'y';
 
         // Use a do-while loop to repeat the simulation as long as the user wants to continue running it
         do {
             try {
-                // Use a while loop to get valid input for the simulation time
-                while (true) {
+                boolean validInput = false;
+                while (!validInput) {
                     System.out.print("Enter the simulation time (minutes): ");
-                    simulationTime = sc.nextDouble();
-                    if (simulationTime <= 0) {
-                        throw new Exception("Simulation time must be greater than 0.");
+                    if (sc.hasNextDouble()) {
+                        simulationTime = sc.nextDouble();
+                        if (simulationTime <= 0) {
+                            System.out.println("Error: Simulation time must be greater than 0.");
+                        } else {
+                            validInput = true;
+                        }
+                    } else {
+                        System.out.println("Error: Invalid input. Please enter a valid number.");
+                        sc.next(); // Discard non-numeric input
                     }
-                    break;
                 }
 
                 // Create an instance of the Simulation class and run it
@@ -47,14 +54,14 @@ public class Main {
                 System.out.print("Do you want to run another simulation? (y/n): ");
                 continueSim = sc.next().charAt(0);
             } catch (Exception e) {
-                // If there's an error (e.g. user inputs an invalid simulation time), print an error message and end the program
-                System.out.println(e.getMessage());
-                continueSim = 'n'; // End program if there's an error
+                // If there's an error, print an error message and repeat the loop
+                System.out.println("Error: " + e.getMessage());
+                continueSim = 'y'; // Repeat loop if there's an error
+                sc.next(); // Discard input to prevent infinite loop
             }
         } while (continueSim == 'y');
+
         // Close the Scanner object to avoid resource leak
         sc.close();
     }
 }
-
-
