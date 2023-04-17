@@ -26,7 +26,6 @@ public class SimulationProcess {
 
     private void simulate(double simulationTime) {
         System.out.println("-------Just Finished Event ------------- Variables ---------------------- Attributes ------------------------------------- Statistical Accumulators ------------------");
-        // adjust spaces between variable as needed
         System.out.printf("%-12s %-9s %-15s %-8s %-14s %-24s %-20s %-4s %-4s %-6s %-6s %-6s %-6s %-6s %-5s %-5s%n", "Entity No", "Time t",
                 "Event Type", "Q(t)", "B(t)", "In Queue", "In Service", "P", "N", "ΣWQ", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
 
@@ -78,10 +77,10 @@ public class SimulationProcess {
                     inService.remove();
                 }
                 producedParts++;
-                maxTimeInSystem = getTS(entityNo, time)[0];
-                totalTimeInSystem = getTS(entityNo, time)[1];
-                maxWaitingTime = getWQ(entityNo, time)[0];
-                totalWaitingTime = getWQ(entityNo, time)[1];
+                maxTimeInSystem = getTimeInSystem(entityNo, time)[0];
+                totalTimeInSystem = getTimeInSystem(entityNo, time)[1];
+                maxWaitingTime = getWaitingTime(entityNo, time)[0];
+                totalWaitingTime = getWaitingTime(entityNo, time)[1];
                 if (!inQueue.isEmpty()) {
                     partsPassedQueue++;
                     seizeResource(inQueue.peek().getPartNumber(), time);
@@ -117,7 +116,6 @@ public class SimulationProcess {
 
     // This method prints a single row of the simulation to the console, with specific formatting for each variable.
     private void printRow() {
-        // adjust spaces between variables as needed
         System.out.printf("%-12s %-9s %-15s %-8s %-14s %-24s %-20s %-4s %-4s %-6s %-6s %-6s %-6s %-6s %-5s %-5s%n",
                 nextPart.get(nextPart.size() - 1)[0], nextPart.get(nextPart.size() - 1)[1], nextPart.get(nextPart.size() - 1)[2],
                 nextPart.get(nextPart.size() - 1)[3], nextPart.get(nextPart.size() - 1)[4], nextPart.get(nextPart.size() - 1)[5],
@@ -160,7 +158,7 @@ public class SimulationProcess {
     /**
      * This method calculate the time in system and return values (ΣTS & TS*)
      */
-    private double[] getTS(int id, double currentTime) {
+    private double[] getTimeInSystem(int id, double currentTime) {
         double[] out = new double[2];
 
         for (Object[] row : nextPart) {
@@ -179,7 +177,7 @@ public class SimulationProcess {
     /**
      * This method calculate waiting time and return values (ΣWQ & WQ*)
      */
-    private double[] getWQ(int id, double currentTime) {
+    private double[] getWaitingTime(int id, double currentTime) {
         double[] out = new double[2];
 
         for (Object[] row : nextPart) {
