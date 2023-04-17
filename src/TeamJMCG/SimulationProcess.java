@@ -4,23 +4,23 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 public class SimulationProcess {
-    private final ArrayList<Object[]> REPLICATION; // Holds each row of the simulation
-    private final ArrayList<Part> MACHINE_PARTS; // Holds each machine part for the simulation
+    private final ArrayList<Object[]> nextPart; // Holds each step of the simulation as an array of objects
+    private final ArrayList<Part> partsData; // Holds data for each part used in the simulation
 
     public SimulationProcess(double simulationTime) {
-        REPLICATION = new ArrayList<>();
-        MACHINE_PARTS = new ArrayList<>();
-        MACHINE_PARTS.add(new Part(1, 0.00, 2.90));
-        MACHINE_PARTS.add(new Part(2, 1.73, 1.76));
-        MACHINE_PARTS.add(new Part(3, 3.08, 3.39));
-        MACHINE_PARTS.add(new Part(4, 3.79, 4.52));
-        MACHINE_PARTS.add(new Part(5, 4.41, 4.46));
-        MACHINE_PARTS.add(new Part(6, 18.69, 4.36));
-        MACHINE_PARTS.add(new Part(7, 19.39, 2.07));
-        MACHINE_PARTS.add(new Part(8, 34.91, 3.36));
-        MACHINE_PARTS.add(new Part(9, 38.06, 2.37));
-        MACHINE_PARTS.add(new Part(10, 39.82, 5.38));
-        MACHINE_PARTS.add(new Part(11, 40.82, 0.0));
+        nextPart = new ArrayList<>();
+        partsData = new ArrayList<>();
+        partsData.add(new Part(1, 0.00, 2.90));
+        partsData.add(new Part(2, 1.73, 1.76));
+        partsData.add(new Part(3, 3.08, 3.39));
+        partsData.add(new Part(4, 3.79, 4.52));
+        partsData.add(new Part(5, 4.41, 4.46));
+        partsData.add(new Part(6, 18.69, 4.36));
+        partsData.add(new Part(7, 19.39, 2.07));
+        partsData.add(new Part(8, 34.91, 3.36));
+        partsData.add(new Part(9, 38.06, 2.37));
+        partsData.add(new Part(10, 39.82, 5.38));
+        partsData.add(new Part(11, 40.82, 0.0));
         simulate(simulationTime);
     }
 
@@ -55,7 +55,7 @@ public class SimulationProcess {
         double areaUnderSystemLengthCurve;
 
 
-        REPLICATION.add(new Object[] {0, time, "Init", 0, 0, inQueue, inService,  0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0});
+        nextPart.add(new Object[] {0, time, "Init", 0, 0, inQueue, inService,  0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0});
         printRow();
 
         for (int i = 0; i < 100; i++) {
@@ -94,7 +94,7 @@ public class SimulationProcess {
             areaUnderQueueLengthCurve = getAreaQ(time);
             areaUnderSystemLengthCurve = getAreaB(time);
 
-            REPLICATION.add(new Object[] {entityNo, time, eventType, qt, bt, inQueue, inService, producedParts, partsPassedQueue, totalWaitingTime,
+            nextPart.add(new Object[] {entityNo, time, eventType, qt, bt, inQueue, inService, producedParts, partsPassedQueue, totalWaitingTime,
                     maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve});
             printRow();
 
@@ -105,7 +105,7 @@ public class SimulationProcess {
                 if (time > simulationTime) {
                     areaUnderQueueLengthCurve = getAreaQ(time);
                     areaUnderSystemLengthCurve = getAreaB(time);
-                    REPLICATION.add(new Object[] {"-", time, "End", qt, bt, inQueue, inService,  producedParts, partsPassedQueue, totalWaitingTime,
+                    nextPart.add(new Object[] {"-", time, "End", qt, bt, inQueue, inService,  producedParts, partsPassedQueue, totalWaitingTime,
                             maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve});
                     printRow();
                     printPerformanceMetric(simulationTime, producedParts, totalWaitingTime, areaUnderQueueLengthCurve, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderSystemLengthCurve);
@@ -115,17 +115,19 @@ public class SimulationProcess {
         }
     }
 
+    // Print a single row of the simulation to the console, with specific formatting for each variable.
     private void printRow() {
         // adjust spaces between variables as needed
         System.out.printf("%-12s %-9s %-15s %-8s %-14s %-24s %-20s %-4s %-4s %-6s %-6s %-6s %-6s %-6s %-5s %-5s%n",
-                REPLICATION.get(REPLICATION.size() - 1)[0], REPLICATION.get(REPLICATION.size() - 1)[1], REPLICATION.get(REPLICATION.size() - 1)[2],
-                REPLICATION.get(REPLICATION.size() - 1)[3], REPLICATION.get(REPLICATION.size() - 1)[4], REPLICATION.get(REPLICATION.size() - 1)[5],
-                REPLICATION.get(REPLICATION.size() - 1)[6], REPLICATION.get(REPLICATION.size() - 1)[7], REPLICATION.get(REPLICATION.size() - 1)[8],
-                REPLICATION.get(REPLICATION.size() - 1)[9], REPLICATION.get(REPLICATION.size() - 1)[10], REPLICATION.get(REPLICATION.size() - 1)[11],
-                REPLICATION.get(REPLICATION.size() - 1)[12], REPLICATION.get(REPLICATION.size() - 1)[13], REPLICATION.get(REPLICATION.size() - 1)[14],
-                REPLICATION.get(REPLICATION.size() - 1)[15]);
+                nextPart.get(nextPart.size() - 1)[0], nextPart.get(nextPart.size() - 1)[1], nextPart.get(nextPart.size() - 1)[2],
+                nextPart.get(nextPart.size() - 1)[3], nextPart.get(nextPart.size() - 1)[4], nextPart.get(nextPart.size() - 1)[5],
+                nextPart.get(nextPart.size() - 1)[6], nextPart.get(nextPart.size() - 1)[7], nextPart.get(nextPart.size() - 1)[8],
+                nextPart.get(nextPart.size() - 1)[9], nextPart.get(nextPart.size() - 1)[10], nextPart.get(nextPart.size() - 1)[11],
+                nextPart.get(nextPart.size() - 1)[12], nextPart.get(nextPart.size() - 1)[13], nextPart.get(nextPart.size() - 1)[14],
+                nextPart.get(nextPart.size() - 1)[15]);
     }
-    
+
+    // Prints the performance metrics of the simulation
     private void printPerformanceMetric(double simulationTime, int producedParts, double totalWaitingTime, double areaUnderQueueLengthCurve, double maxWaitingTime, double totalTimeInSystem, double maxTimeInSystem, double areaUnderSystemLengthCurve) {
         DecimalFormat df = new DecimalFormat("#.##");
         System.out.println("Simulation completed.");
@@ -145,14 +147,14 @@ public class SimulationProcess {
      * Retrieves a value in a row as a double.
      */
     private double getRowValue(int row, int column) {
-        return (double) REPLICATION.get(row)[column];
+        return (double) nextPart.get(row)[column];
     }
 
     /**
      * Retrieves a value in a row as an int.
      */
     private int getRowValueInt(int row, int column) {
-        return (int) REPLICATION.get(row)[column];
+        return (int) nextPart.get(row)[column];
     }
 
     /**
@@ -161,16 +163,16 @@ public class SimulationProcess {
     private double[] getTS(int id, double currentTime) {
         double[] out = new double[2];
 
-        for (Object[] row : REPLICATION) {
+        for (Object[] row : nextPart) {
             if ((int) row[0] == id) {
                 out[0] = roundOff(currentTime-(double) row[1]);
-                out[1] = roundOff(out[0] + getRowValue(REPLICATION.size() - 1, 11));
+                out[1] = roundOff(out[0] + getRowValue(nextPart.size() - 1, 11));
                 return out;
             }
         }
 
-        out[0] = getRowValue(REPLICATION.size()-1, 11);
-        out[1] = getRowValue(REPLICATION.size()-1, 12);
+        out[0] = getRowValue(nextPart.size()-1, 11);
+        out[1] = getRowValue(nextPart.size()-1, 12);
         return out;
     }
 
@@ -180,16 +182,16 @@ public class SimulationProcess {
     private double[] getWQ(int id, double currentTime) {
         double[] out = new double[2];
 
-        for (Object[] row : REPLICATION) {
+        for (Object[] row : nextPart) {
             if ((int) row[0] == id+1) {
                 out[0] = roundOff(currentTime-(double) row[1]);
-                out[1] = roundOff(out[0] + getRowValue(REPLICATION.size() - 1, 9));
+                out[1] = roundOff(out[0] + getRowValue(nextPart.size() - 1, 9));
                 return out;
             }
         }
 
-        out[0] = getRowValue(REPLICATION.size()-1, 10);
-        out[1] = getRowValue(REPLICATION.size()-1, 9);
+        out[0] = getRowValue(nextPart.size()-1, 10);
+        out[1] = getRowValue(nextPart.size()-1, 9);
         return out;
     }
 
@@ -197,14 +199,14 @@ public class SimulationProcess {
      * Calculate area under the queue length curve (∫Q)
      */
     private double getAreaQ(double currentTime) {
-        return roundOff((currentTime - getRowValue(REPLICATION.size()-1,1)) * (getRowValueInt(REPLICATION.size()-1,3)) + getRowValue(REPLICATION.size()-1,13));
+        return roundOff((currentTime - getRowValue(nextPart.size()-1,1)) * (getRowValueInt(nextPart.size()-1,3)) + getRowValue(nextPart.size()-1,13));
     }
 
     /**
      * Calculate area under the system length curve (∫B).
      */
     private double getAreaB(double currentTime) {
-        return roundOff((currentTime - getRowValue(REPLICATION.size() - 1 , 1)) * (getRowValueInt(REPLICATION.size() -1, 4))) + getRowValue(REPLICATION.size() - 1 , 15);
+        return roundOff((currentTime - getRowValue(nextPart.size() - 1 , 1)) * (getRowValueInt(nextPart.size() -1, 4))) + getRowValue(nextPart.size() - 1 , 15);
     }
 
     /**
@@ -213,7 +215,7 @@ public class SimulationProcess {
     private int getMaxQueue(int currentQueueSize) {
         int max = 0;
 
-        for (Object[] row : REPLICATION) {
+        for (Object[] row : nextPart) {
             if ((int)row[3] > max) { max = (int)row[3]; }
         }
         if (max < currentQueueSize) { max = currentQueueSize; }
@@ -222,7 +224,7 @@ public class SimulationProcess {
     }
 
     private void seizeResource(int partID, double seizeTime) {
-        for (Part machinePart : MACHINE_PARTS) {
+        for (Part machinePart : partsData) {
             if (machinePart.getPartNumber() == partID) {
                 machinePart.setSeizeResourceTime(seizeTime);
                 break;
@@ -234,7 +236,7 @@ public class SimulationProcess {
      * Returns true if any part has arrived according to the current time
      */
     private boolean checkArrival(double time) {
-        for (Part part : MACHINE_PARTS) {
+        for (Part part : partsData) {
             if (time == part.getArrivalTime()) {
                 return true;
             }
@@ -246,7 +248,7 @@ public class SimulationProcess {
      * Return true if any part has departed according to the current time
      */
     private boolean checkDeparture(double time) {
-        for (Part part : MACHINE_PARTS) {
+        for (Part part : partsData) {
             if (part.getSeizeResourceTime() != -1 && time == part.getDepartureTime()) {
                 return true;
             }
@@ -258,7 +260,7 @@ public class SimulationProcess {
      * Return the part that has arrived according to the current time
      */
     private Part getArrivedPart(double time) {
-        for (Part part : MACHINE_PARTS) {
+        for (Part part : partsData) {
             if (time == part.getArrivalTime()) {
                 return part;
             }
@@ -270,7 +272,7 @@ public class SimulationProcess {
      * Return the part that has departed according to the current time
      */
     private Part getDepartedPart(double time) {
-        for (Part part : MACHINE_PARTS) {
+        for (Part part : partsData) {
             if (part.getSeizeResourceTime() != -1 && time == part.getDepartureTime()) {
                 return part;
             }
