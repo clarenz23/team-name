@@ -107,7 +107,8 @@ public class SimulationProcess {
                     nextPart.add(new Object[] {"-", time, "End", qt, bt, inQueue, inService,  producedParts, partsPassedQueue, totalWaitingTime,
                             maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve});
                     printRow();
-                    printPerformanceMetric(simulationTime, producedParts, totalWaitingTime, areaUnderQueueLengthCurve, maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderSystemLengthCurve);
+                    printPerformanceMetric(simulationTime, producedParts, totalWaitingTime, areaUnderQueueLengthCurve,
+                            maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderSystemLengthCurve);
                     return;
                 }
             }
@@ -126,7 +127,8 @@ public class SimulationProcess {
     }
 
     // This method prints the performance metrics of the simulation
-    private void printPerformanceMetric(double simulationTime, int producedParts, double totalWaitingTime, double areaUnderQueueLengthCurve, double maxWaitingTime, double totalTimeInSystem, double maxTimeInSystem, double areaUnderSystemLengthCurve) {
+    private void printPerformanceMetric(double simulationTime, int producedParts, double totalWaitingTime, double areaUnderQueueLengthCurve,
+                                        double maxWaitingTime, double totalTimeInSystem, double maxTimeInSystem, double areaUnderSystemLengthCurve) {
         DecimalFormat df = new DecimalFormat("#.##");
         System.out.println("Simulation completed.");
         System.out.println("Simulation time: " + df.format(simulationTime) + "\n");
