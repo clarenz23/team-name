@@ -39,7 +39,10 @@ public class Main {
                     }
                     break;
                 }
-                new Simulation(simulationTime);
+
+                // Create an instance of the Simulation class and run it
+                new SimulationProcess(simulationTime);
+
                 // Ask the user if they want to run another simulation
                 System.out.print("Do you want to run another simulation? (y/n): ");
                 continueSim = sc.next().charAt(0);
