@@ -25,7 +25,10 @@ public class SimulationProcess {
     }
 
     private void simulate(double simulationTime) {
-        System.out.printf("|%6s |%6s |%8s |%6s |%6s |%20s |%20s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |\n", "e #", "time", "event", "Q(t)", "B(t)", "inQueue", "inService", "P", "N", "ΣWQ", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
+        System.out.println("-----Just Finished Event ------------- Variables ---------------------- Attributes ------------------------------------- Statistical Accumulators ------------------");
+        // adjust spaces between variable as needed
+        System.out.printf("|%6s |%6s |%8s |%6s |%6s |%20s |%20s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |\n", "Entity No", "Time t",
+                "Event Type", "Q(t)", "B(t)", "In Queue", "In Service", "P", "N", "ΣWQ", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
 
         // just finished event
         double time = 0;
@@ -43,21 +46,23 @@ public class SimulationProcess {
         // statistical accumulator
         int producedParts = 0;
         int partsPassedQueue = 0;
-        double wqA = 0;
-        double tsA = 0;
-        double tsB = 0;
-        double qA;
-        int qB;
-        double b;
-        double wqB = 0;
-        REPLICATION.add(new Object[] {0, time, "init", 0, 0, inQueue, inService,  0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0});
+        double totalWaitingTime = 0;
+        double maxWaitingTime = 0;
+        double totalTimeInSystem = 0;
+        double maxTimeInSystem = 0;
+        double areaUnderQueueLengthCurve;
+        int maxQueue;
+        double areaUnderSystemLengthCurve;
+
+
+        REPLICATION.add(new Object[] {0, time, "Init", 0, 0, inQueue, inService,  0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0});
         printRow();
 
         for (int i = 0; i < 100; i++) {
             if (checkArrival(time)) {
                 Part part = getArrivedPart(time);
                 entityNo = part.getPartNumber();
-                eventType = "arrive";
+                eventType = "Arr";
                 if (bt == 1) {
                     inQueue.add(part);
                 } else {
@@ -68,15 +73,15 @@ public class SimulationProcess {
             } else {
                 Part part = getDepartedPart(time);
                 entityNo = part.getPartNumber();
-                eventType = "depart";
+                eventType = "Dep";
                 if (!inService.isEmpty()) {
                     inService.remove();
                 }
                 producedParts++;
-                tsB = getTS(entityNo, time)[0];
-                tsA = getTS(entityNo, time)[1];
-                wqB = getWQ(entityNo, time)[0];
-                wqA = getWQ(entityNo, time)[1];
+                maxTimeInSystem = getTS(entityNo, time)[0];
+                totalTimeInSystem = getTS(entityNo, time)[1];
+                maxWaitingTime = getWQ(entityNo, time)[0];
+                totalWaitingTime = getWQ(entityNo, time)[1];
                 if (!inQueue.isEmpty()) {
                     partsPassedQueue++;
                     seizeResource(inQueue.peek().getPartNumber(), time);
@@ -85,11 +90,12 @@ public class SimulationProcess {
             }
             qt = inQueue.size();
             bt = inService.size();
-            qB = getMaxQueue(qt);
-            qA = getAreaQ(time);
-            b = getAreaB(time);
+            maxQueue = getMaxQueue(qt);
+            areaUnderQueueLengthCurve = getAreaQ(time);
+            areaUnderSystemLengthCurve = getAreaB(time);
 
-            REPLICATION.add(new Object[] {entityNo, time, eventType, qt, bt, inQueue, inService, producedParts, partsPassedQueue, wqA, wqB, tsA, tsB, qA, qB, b});
+            REPLICATION.add(new Object[] {entityNo, time, eventType, qt, bt, inQueue, inService, producedParts, partsPassedQueue, totalWaitingTime,
+                    maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve});
             printRow();
 
             boolean runClock = true;
@@ -97,9 +103,10 @@ public class SimulationProcess {
                 time = roundOff(time + 0.01);
                 if (checkArrival(time) || checkDeparture(time)) { runClock = false; }
                 if (time > simulationTime) {
-                    qA = getAreaQ(time);
-                    b = getAreaB(time);
-                    REPLICATION.add(new Object[] {"-", time, "end", qt, bt, inQueue, inService,  producedParts, partsPassedQueue, wqA, wqB, tsA, tsB, qA, qB, b});
+                    areaUnderQueueLengthCurve = getAreaQ(time);
+                    areaUnderSystemLengthCurve = getAreaB(time);
+                    REPLICATION.add(new Object[] {"-", time, "End", qt, bt, inQueue, inService,  producedParts, partsPassedQueue, totalWaitingTime,
+                            maxWaitingTime, totalTimeInSystem, maxTimeInSystem, areaUnderQueueLengthCurve, maxQueue, areaUnderSystemLengthCurve});
                     printRow();
                     return;
                 }
@@ -108,34 +115,32 @@ public class SimulationProcess {
     }
 
     private void printRow() {
-        System.out.printf("|%6s |%6s |%8s |%6s |%6s |%20s |%20s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |\n", REPLICATION.get(REPLICATION.size() - 1)[0], REPLICATION.get(REPLICATION.size() - 1)[1], REPLICATION.get(REPLICATION.size() - 1)[2], REPLICATION.get(REPLICATION.size() - 1)[3], REPLICATION.get(REPLICATION.size() - 1)[4], REPLICATION.get(REPLICATION.size() - 1)[5], REPLICATION.get(REPLICATION.size() - 1)[6], REPLICATION.get(REPLICATION.size() - 1)[7], REPLICATION.get(REPLICATION.size() - 1)[8], REPLICATION.get(REPLICATION.size() - 1)[9], REPLICATION.get(REPLICATION.size() - 1)[10], REPLICATION.get(REPLICATION.size() - 1)[11], REPLICATION.get(REPLICATION.size() - 1)[12], REPLICATION.get(REPLICATION.size() - 1)[13], REPLICATION.get(REPLICATION.size() - 1)[14], REPLICATION.get(REPLICATION.size() - 1)[15]);
+        // adjust spaces between variables as needed
+        System.out.printf("|%6s |%6s |%8s |%6s |%6s |%20s |%20s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |\n",
+                REPLICATION.get(REPLICATION.size() - 1)[0], REPLICATION.get(REPLICATION.size() - 1)[1], REPLICATION.get(REPLICATION.size() - 1)[2],
+                REPLICATION.get(REPLICATION.size() - 1)[3], REPLICATION.get(REPLICATION.size() - 1)[4], REPLICATION.get(REPLICATION.size() - 1)[5],
+                REPLICATION.get(REPLICATION.size() - 1)[6], REPLICATION.get(REPLICATION.size() - 1)[7], REPLICATION.get(REPLICATION.size() - 1)[8],
+                REPLICATION.get(REPLICATION.size() - 1)[9], REPLICATION.get(REPLICATION.size() - 1)[10], REPLICATION.get(REPLICATION.size() - 1)[11],
+                REPLICATION.get(REPLICATION.size() - 1)[12], REPLICATION.get(REPLICATION.size() - 1)[13], REPLICATION.get(REPLICATION.size() - 1)[14],
+                REPLICATION.get(REPLICATION.size() - 1)[15]);
     }
 
     /**
-     * Utility method. Retrieves a value in a row as a double.
-     * @param row Row position
-     * @param column Column position
-     * @return Requested double
+     * Retrieves a value in a row as a double.
      */
     private double getRowValue(int row, int column) {
         return (double) REPLICATION.get(row)[column];
     }
 
     /**
-     * Utility method. Retrieves a value in a row as an int.
-     * @param row Row position
-     * @param column Column position
-     * @return Requested integer
+     * Retrieves a value in a row as an int.
      */
     private int getRowValueInt(int row, int column) {
         return (int) REPLICATION.get(row)[column];
     }
 
     /**
-     * Calculate and return TS values (ΣTS & TS*).
-     * @param id ID of current the part
-     * @param currentTime Current time
-     * @return ΣTS & TS* stored in a double array
+     * Calculate and return time in system values (ΣTS & TS*).
      */
     private double[] getTS(int id, double currentTime) {
         double[] out = new double[2];
@@ -154,10 +159,7 @@ public class SimulationProcess {
     }
 
     /**
-     * Calculate and return WQ values (ΣWQ & WQ*).
-     * @param id ID of current the part
-     * @param currentTime Current time
-     * @return ΣWQ & WQ* stored in a double array
+     * Calculate and return waiting time values (ΣWQ & WQ*).
      */
     private double[] getWQ(int id, double currentTime) {
         double[] out = new double[2];
@@ -176,27 +178,21 @@ public class SimulationProcess {
     }
 
     /**
-     * Calculate ∫Q
-     * @param currentTime Current time
-     * @return Calculated  ∫Q
+     * Calculate area under the queue length curve (∫Q)
      */
     private double getAreaQ(double currentTime) {
         return roundOff((currentTime - getRowValue(REPLICATION.size()-1,1)) * (getRowValueInt(REPLICATION.size()-1,3)) + getRowValue(REPLICATION.size()-1,13));
     }
 
     /**
-     * Calculate ∫B
-     * @param currentTime Current time
-     * @return Calculated  ∫B
+     * Calculate area under the system length curve (∫B).
      */
     private double getAreaB(double currentTime) {
         return roundOff((currentTime - getRowValue(REPLICATION.size() - 1 , 1)) * (getRowValueInt(REPLICATION.size() -1, 4))) + getRowValue(REPLICATION.size() - 1 , 15);
     }
 
     /**
-     * Calculate Q*
-     * @param currentQueueSize Current time
-     * @return Q*
+     * Calculate maximum queue (Q*)
      */
     private int getMaxQueue(int currentQueueSize) {
         int max = 0;
@@ -219,9 +215,7 @@ public class SimulationProcess {
     }
 
     /**
-     * Return true if any part has arrived according to the current time
-     * @param time current time
-     * @return true if a part arrived
+     * Returns true if any part has arrived according to the current time
      */
     private boolean checkArrival(double time) {
         for (Part part : MACHINE_PARTS) {
@@ -234,8 +228,6 @@ public class SimulationProcess {
 
     /**
      * Return true if any part has departed according to the current time
-     * @param time current time
-     * @return true if a part departed
      */
     private boolean checkDeparture(double time) {
         for (Part part : MACHINE_PARTS) {
@@ -248,8 +240,6 @@ public class SimulationProcess {
 
     /**
      * Return the part that has arrived according to the current time
-     * @param time current time
-     * @return newly arrived part
      */
     private Part getArrivedPart(double time) {
         for (Part part : MACHINE_PARTS) {
@@ -262,8 +252,6 @@ public class SimulationProcess {
 
     /**
      * Return the part that has departed according to the current time
-     * @param time current time
-     * @return newly departed part
      */
     private Part getDepartedPart(double time) {
         for (Part part : MACHINE_PARTS) {
@@ -275,9 +263,7 @@ public class SimulationProcess {
     }
 
     /**
-     * Utility method. Round off a double to two digits.
-     * @param value double value
-     * @return double values rounded off to two digits
+     * Round off a double to two digits.
      */
     private double roundOff(double value) {
         DecimalFormat df = new DecimalFormat("#.##");
@@ -308,18 +294,21 @@ class Part {
         this.arrivalTime = -1;
         this.serviceTime = -1;
     }
+
     /**
      Gets the time at which the resource was seized by the part.
      */
     public double getSeizeResourceTime() {
         return seizeResourceTime;
     }
+
     /**
      Sets the time at which the resource was seized by the part.
      */
     public void setSeizeResourceTime(double seizeResourceTime) {
         this.seizeResourceTime = seizeResourceTime;
     }
+
     /**
      Gets the time at which the part will depart from the system.
      */
@@ -328,18 +317,21 @@ class Part {
         String formattedValue = df.format(seizeResourceTime + serviceTime);
         return Double.parseDouble(formattedValue);
     }
+
     /**
      Gets the part number.
      */
     public int getPartNumber() {
         return partNumber;
     }
+
     /**
      Gets the arrival time of the part.
      */
     public double getArrivalTime() {
         return arrivalTime;
     }
+    
     /**
      Returns a string representation of the arrival time.
      */
