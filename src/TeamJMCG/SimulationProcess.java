@@ -25,9 +25,9 @@ public class SimulationProcess {
     }
 
     private void simulate(double simulationTime) {
-        System.out.println("-----Just Finished Event ------------- Variables ---------------------- Attributes ------------------------------------- Statistical Accumulators ------------------");
+        System.out.println("-------Just Finished Event ------------- Variables ---------------------- Attributes ------------------------------------- Statistical Accumulators ------------------");
         // adjust spaces between variable as needed
-        System.out.printf("|%6s |%6s |%8s |%6s |%6s |%20s |%20s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |\n", "Entity No", "Time t",
+        System.out.printf("%-12s %-9s %-15s %-8s %-14s %-24s %-20s %-4s %-4s %-6s %-6s %-6s %-6s %-6s %-5s %-5s%n", "Entity No", "Time t",
                 "Event Type", "Q(t)", "B(t)", "In Queue", "In Service", "P", "N", "ΣWQ", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
 
         // just finished event
@@ -116,7 +116,7 @@ public class SimulationProcess {
 
     private void printRow() {
         // adjust spaces between variables as needed
-        System.out.printf("|%6s |%6s |%8s |%6s |%6s |%20s |%20s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |\n",
+        System.out.printf("%-12s %-9s %-15s %-8s %-14s %-24s %-20s %-4s %-4s %-6s %-6s %-6s %-6s %-6s %-5s %-5s%n",
                 REPLICATION.get(REPLICATION.size() - 1)[0], REPLICATION.get(REPLICATION.size() - 1)[1], REPLICATION.get(REPLICATION.size() - 1)[2],
                 REPLICATION.get(REPLICATION.size() - 1)[3], REPLICATION.get(REPLICATION.size() - 1)[4], REPLICATION.get(REPLICATION.size() - 1)[5],
                 REPLICATION.get(REPLICATION.size() - 1)[6], REPLICATION.get(REPLICATION.size() - 1)[7], REPLICATION.get(REPLICATION.size() - 1)[8],
