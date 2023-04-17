@@ -3,9 +3,7 @@ package TeamJMCG;
 import java.text.DecimalFormat;
 import java.util.*;
 
-
 public class SimulationProcess {
-
     private final ArrayList<Object[]> REPLICATION; // Holds each row of the simulation
     private final ArrayList<Part> MACHINE_PARTS; // Holds each machine part for the simulation
 
@@ -28,15 +26,23 @@ public class SimulationProcess {
 
     private void simulate(double simulationTime) {
         System.out.printf("|%6s |%6s |%8s |%6s |%6s |%20s |%20s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |%6s |\n", "e #", "time", "event", "Q(t)", "B(t)", "inQueue", "inService", "P", "N", "ΣWQ", "WQ*", "ΣTS", "TS*", "∫Q", "Q*", "∫B");
+
+        // just finished event
         double time = 0;
         int entityNo;
         String eventType;
+
+        // variables
         int qt;
         int bt = 0;
+
+        // attributes
         Queue<Part> inQueue = new LinkedList<>();
         Queue<Part> inService = new LinkedList<>();
-        int p = 0;
-        int n = 0;
+
+        // statistical accumulator
+        int producedParts = 0;
+        int partsPassedQueue = 0;
         double wqA = 0;
         double tsA = 0;
         double tsB = 0;
@@ -57,7 +63,7 @@ public class SimulationProcess {
                 } else {
                     inService.add(part);
                     seizeResource(part.getPartNumber(), time);
-                    n++;
+                    partsPassedQueue++;
                 }
             } else {
                 Part part = getDepartedPart(time);
@@ -66,13 +72,13 @@ public class SimulationProcess {
                 if (!inService.isEmpty()) {
                     inService.remove();
                 }
-                p++;
+                producedParts++;
                 tsB = getTS(entityNo, time)[0];
                 tsA = getTS(entityNo, time)[1];
                 wqB = getWQ(entityNo, time)[0];
                 wqA = getWQ(entityNo, time)[1];
                 if (!inQueue.isEmpty()) {
-                    n++;
+                    partsPassedQueue++;
                     seizeResource(inQueue.peek().getPartNumber(), time);
                     inService.add(inQueue.remove());
                 }
@@ -83,7 +89,7 @@ public class SimulationProcess {
             qA = getAreaQ(time);
             b = getAreaB(time);
 
-            REPLICATION.add(new Object[] {entityNo, time, eventType, qt, bt, inQueue, inService, p, n, wqA, wqB, tsA, tsB, qA, qB, b});
+            REPLICATION.add(new Object[] {entityNo, time, eventType, qt, bt, inQueue, inService, producedParts, partsPassedQueue, wqA, wqB, tsA, tsB, qA, qB, b});
             printRow();
 
             boolean runClock = true;
@@ -93,7 +99,7 @@ public class SimulationProcess {
                 if (time > simulationTime) {
                     qA = getAreaQ(time);
                     b = getAreaB(time);
-                    REPLICATION.add(new Object[] {"-", time, "end", qt, bt, inQueue, inService,  p, n, wqA, wqB, tsA, tsB, qA, qB, b});
+                    REPLICATION.add(new Object[] {"-", time, "end", qt, bt, inQueue, inService,  producedParts, partsPassedQueue, wqA, wqB, tsA, tsB, qA, qB, b});
                     printRow();
                     return;
                 }
